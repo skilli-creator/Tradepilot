@@ -1,4 +1,4 @@
-/* Base colors inspired by your sample */
+/* Base colors */
 :root {
   --bg-dark: #0b1f3a;       /* deep navy background */
   --panel-bg: #081a33;      /* muted blue panel background */
@@ -8,6 +8,7 @@
   --accent-blue: #3b82f6;   /* highlight blue */
 }
 
+/* Global styles */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -32,9 +33,20 @@ body {
   margin-right: 20px;
 }
 
-.time-info {
+/* Logout button */
+.logout button {
+  padding: 8px 16px;
+  background: var(--accent-red);
+  color: white;
   font-weight: bold;
-  color: var(--accent-green);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout button:hover {
+  background: #b91c1c; /* darker red */
 }
 
 /* Dashboard grid layout */
@@ -60,7 +72,7 @@ body {
   text-align: left;
 }
 
-/* Floating panels */
+/* Panels */
 .panel {
   background: var(--panel-bg);
   border-radius: 12px;
@@ -74,7 +86,7 @@ body {
   box-shadow: 0 12px 30px rgba(0,0,0,0.8);
 }
 
-/* Assign areas */
+/* Assign grid areas */
 .controls { grid-area: controls; }
 .momentum { grid-area: momentum; }
 .ticks { grid-area: ticks; }
