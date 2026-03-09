@@ -60,10 +60,12 @@ display:flex;
 justify-content:center;
 }
 
-.bot-grid{
-display:grid;
-grid-template-columns:repeat(3,260px);
-gap:30px;
+.bot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  width: 90%;
+  max-width: 1000px;
 }
 
 /* BOT CARDS */
