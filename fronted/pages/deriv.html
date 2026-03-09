@@ -1,81 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>🔷Tradepilot</title>
-<link rel="stylesheet" href="../styles/dashboard.css">
+  <meta charset="UTF-8">
+  <title>🔷Tradepilot</title>
+  <link rel="stylesheet" href="../styles/bots.css">
 </head>
 
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <!-- Left side: Title -->
-  <div class="site-title">
-    <h2>🔷Tradepilot</h2>
-  </div>
-
-  <!-- Right side: Profile picture -->
-  <div class="profile-pic">
-    <img src="../assets/images/Professional style.JPG" alt="Owner Photo">
-    <span class="bio-tooltip">Website Owner Bio</span>
-  </div>
-</div>
-
-<!-- TITLE -->
-<div class="page-title">
-  Deriv Trading Bots
-</div>
-
-<div class="bot-intro">
-  Select a trading bot to start automated trading
-</div>
-
-<!-- BOT CARDS -->
-<div class="bot-container">
-  <div class="bot-grid">
-
-    <div class="bot-card" onclick="openBot('rise-fall')">
-      <div class="bot-title">Rise / Fall</div>
-      <div class="bot-desc">Predict whether price will rise or fall</div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <!-- Left side: Title -->
+    <div class="site-title">
+      <h2>🔷Tradepilot</h2>
     </div>
 
-    <div class="bot-card" onclick="openBot('higher-lower')">
-      <div class="bot-title">Higher / Lower</div>
-      <div class="bot-desc">Predict if price will close higher or lower</div>
+    <!-- Right side: Profile picture -->
+    <div class="profile-pic">
+      <img src="../assets/images/Professional style.JPG" alt="Owner Photo">
     </div>
 
-    <div class="bot-card" onclick="openBot('over-under')">
-      <div class="bot-title">Over / Under</div>
-      <div class="bot-desc">Predict if a digit will be over or under</div>
+    <!-- Big arrow + label -->
+    <div class="profile-arrow">
+      <span class="arrow-text">Website Owner, click for Bio ➡</span>
     </div>
-
   </div>
-</div>
 
-<script>
-/* open bot */
-function openBot(bot){
-  if(bot=="rise-fall"){
-    window.location.href="risefall.html"
-  }
-  if(bot=="higher-lower"){
-    window.location.href="higherlower.html"
-  }
-  if(bot=="over-under"){
-    window.location.href="overunder.html"
-  }
-}
-</script>
+  <!-- TITLE -->
+  <div class="page-title">
+    Deriv Trading Bots
+  </div>
 
-<div id="footer"></div>
-<script>
-fetch("../components/footer.html")
-.then(res => res.text())
-.then(data => {
-    document.getElementById("footer").innerHTML = data;
-});
-</script>
+  <div class="bot-intro">
+    Select a trading bot to start automated trading
+  </div>
+
+  <!-- BOT CARDS -->
+  <div class="bot-container">
+    <div class="bot-grid">
+
+      <div class="bot-card" onclick="openBot('rise-fall')">
+        <div class="bot-title">Rise / Fall</div>
+        <div class="bot-desc">Predict whether price will rise or fall</div>
+      </div>
+
+      <div class="bot-card" onclick="openBot('higher-lower')">
+        <div class="bot-title">Higher / Lower</div>
+        <div class="bot-desc">Predict if price will close higher or lower</div>
+      </div>
+
+      <div class="bot-card" onclick="openBot('over-under')">
+        <div class="bot-title">Over / Under</div>
+        <div class="bot-desc">Predict if a digit will be over or under</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function openBot(bot){
+      if(bot=="rise-fall"){
+        window.location.href="risefall.html";
+      }
+      if(bot=="higher-lower"){
+        window.location.href="higherlower.html";
+      }
+      if(bot=="over-under"){
+        window.location.href="overunder.html";
+      }
+    }
+  </script>
+
+  <!-- Footer -->
+  <div id="footer"></div>
+  <script>
+    fetch("../components/footer.html")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("footer").innerHTML = data;
+    });
+  </script>
 
 </body>
 </html>
