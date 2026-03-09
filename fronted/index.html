@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔷Tradepilot</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/layout.css">
+    <link rel="stylesheet" href="../styles/components.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: white;
+        }
+
+        a { text-decoration: none; }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            margin: 10px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #22c55e;
+            color: black;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 80px 0;
+            background: #020617;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+            gap: 30px;
+        }
+
+        .feature {
+            background: #0f172a;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+        }
+
+        /* HOW IT WORKS */
+        .steps {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .steps div {
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: black;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="container">
+    <nav style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;">
+        <h2>🔷Tradepilot</h2>
+
+        <div>
+            <a href="pages/login.html" class="btn btn-secondary">Login</a>
+            <a href="pages/register.html" class="btn btn-primary">Get Started</a>
+        </div>
+    </nav>
+</header>
+
+
+<!-- HERO SECTION -->
+<section class="hero container">
+    <h1>Automate Your Trading</h1>
+    <p>
+        Deploy powerful trading bots, monitor markets in real-time,
+        and grow your strategy — all from one dashboard.
+    </p>
+
+    <a href="pages/register.html" class="btn btn-primary">
+        Start Trading
+    </a>
+
+    <a href="pages/login.html" class="btn btn-secondary">
+        Login
+    </a>
+</section>
+
+
+<!-- FEATURES -->
+<section class="features">
+    <div class="container">
+        <h2 style="text-align:center;margin-bottom:50px;">Platform Features</h2>
+
+        <div class="feature-grid">
+
+            <div class="feature">
+                <h3>🤖 Automated Bots</h3>
+                <p>Use and manage trading bots running 24/7.</p>
+            </div>
+
+            <div class="feature">
+                <h3>📊 Live Market Data</h3>
+                <p>Real-time charts and analytics powered by live feeds.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🛡 Risk Management</h3>
+                <p>Control exposure with smart portfolio protection tools.</p>
+            </div>
+
+            <div class="feature">
+                <h3>☁ Cloud Ready</h3>
+                <p>Your bots run securely anytime, anywhere.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="steps container">
+    <h2>How It Works</h2>
+
+    <div>
+        <h3>1️⃣ Create Account</h3>
+        <p>Sign up and access your trading dashboard.</p>
+    </div>
+
+    <div>
+        <h3>2️⃣ Deploy markets</h3>
+        <p>Select market and connect your exchange.</p>
+    </div>
+
+    <div>
+        <h3>3️⃣ Monitor Profits</h3>
+        <p>Track performance with live analytics.</p>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Tradepilot — Automated Trading Platform</p>
+</footer>
+
+</body>
+</html>

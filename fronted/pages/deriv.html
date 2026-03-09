@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tradepilot - Deriv Bots</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background: radial-gradient(circle at center,#0b1f3a,#020617);
+min-height:100vh;
+color:white;
+}
+
+/* TOP BAR */
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+}
+
+.user-info{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.profile-pic{
+width:45px;
+height:45px;
+border-radius:50%;
+border:2px solid #22c55e;
+}
+
+/* PAGE TITLE */
+
+.page-title{
+text-align:center;
+margin-top:20px;
+font-size:24px;
+}
+
+/* BOT INTRO */
+
+.bot-intro{
+text-align:center;
+color:#cbd5f5;
+margin-top:10px;
+margin-bottom:40px;
+}
+
+/* BOT GRID */
+
+.bot-container{
+display:flex;
+justify-content:center;
+}
+
+.bot-grid{
+display:grid;
+grid-template-columns:repeat(3,260px);
+gap:30px;
+}
+
+/* BOT CARDS */
+
+.bot-card{
+background:#081a33;
+border-radius:12px;
+padding:35px;
+text-align:center;
+cursor:pointer;
+transition:0.3s;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+}
+
+.bot-card:hover{
+transform:translateY(-8px) scale(1.05);
+background:#0f2a52;
+box-shadow:0 20px 40px rgba(0,0,0,0.7);
+}
+
+.bot-title{
+font-size:20px;
+margin-bottom:10px;
+}
+
+.bot-desc{
+font-size:14px;
+color:#9ca3af;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR (SAME AS DASHBOARD) -->
+
+<div class="topbar">
+
+<div>
+<h2>🔷Tradepilot</h2>
+</div>
+
+
+</div>
+
+<!-- TITLE -->
+
+<div class="page-title">
+Deriv Trading Bots
+</div>
+
+<div class="bot-intro">
+Select a trading bot to start automated trading
+</div>
+
+<!-- BOT CARDS -->
+
+<div class="bot-container">
+
+<div class="bot-grid">
+
+<div class="bot-card" onclick="openBot('rise-fall')">
+<div class="bot-title">Rise / Fall</div>
+<div class="bot-desc">Predict whether price will rise or fall</div>
+</div>
+
+<div class="bot-card" onclick="openBot('higher-lower')">
+<div class="bot-title">Higher / Lower</div>
+<div class="bot-desc">Predict if price will close higher or lower</div>
+</div>
+
+<div class="bot-card" onclick="openBot('over-under')">
+<div class="bot-title">Over / Under</div>
+<div class="bot-desc">Predict if a digit will be over or under</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* USER DATA (should come from login) */
+
+let username = localStorage.getItem("username") || "Trader"
+let email = localStorage.getItem("email") || "user@email.com"
+
+document.getElementById("username").innerText = username
+
+/* profile image */
+
+let hash = md5(email.trim().toLowerCase())
+
+document.getElementById("profilePic").src =
+"https://www.gravatar.com/avatar/"+hash+"?s=200&d=identicon"
+
+/* open bot */
+
+function openBot(bot){
+
+if(bot=="rise-fall"){
+window.location.href="risefall.html"
+}
+
+if(bot=="higher-lower"){
+window.location.href="higherlower.html"
+}
+
+if(bot=="over-under"){
+window.location.href="overunder.html"
+}
+
+}
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+<div id="footer"></div>
+
+<script>
+fetch("../components/footer.html")
+.then(res => res.text())
+.then(data => {
+    document.getElementById("footer").innerHTML = data;
+});
+</script>
+</body>
+</html>
