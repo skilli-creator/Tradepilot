@@ -1,0 +1,138 @@
+/* Base colors inspired by your sample */
+:root {
+  --bg-dark: #0b1f3a;       /* deep navy background */
+  --panel-bg: #081a33;      /* muted blue panel background */
+  --text-light: #e5e7eb;    /* light gray text */
+  --accent-green: #22c55e;  /* success green */
+  --accent-red: #ef4444;    /* error red */
+  --accent-blue: #3b82f6;   /* highlight blue */
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+/* Layout grid */
+.dashboard {
+  display: grid;
+  grid-template-areas:
+    "controls momentum ticks"
+    "history history history";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 250px;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Floating panels */
+.panel {
+  background: var(--panel-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+}
+
+/* Assign areas */
+.controls { grid-area: controls; }
+.momentum { grid-area: momentum; }
+.ticks { grid-area: ticks; }
+.history { grid-area: history; }
+
+/* Inputs and dropdowns */
+.controls select,
+.controls input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #3b82f6; /* blue border */
+  background: #0f2a52;
+  color: var(--text-light);
+}
+
+/* RUN button */
+#runBtn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-green);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#runBtn:hover {
+  background: #16a34a;
+}
+
+/* History table */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid #3b82f6;
+  padding: 8px;
+  text-align: center;
+}
+
+.history-table th {
+  background: #0f2a52;
+  color: var(--text-light);
+}
+
+.history-table td.win {
+  color: var(--accent-green);
+}
+
+.history-table td.loss {
+  color: var(--accent-red);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-areas:
+      "controls"
+      "momentum"
+      "ticks"
+      "history";
+    grid-template-columns: 1fr;
+  }
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #081a33;
+  padding: 15px 20px;
+  border-bottom: 1px solid #3b82f6;
+  color: var(--text-light);
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.account-info span {
+  margin-right: 20px;
+}
+
+.time-info {
+  font-weight: bold;
+  color: #22c55e;
+}
+
