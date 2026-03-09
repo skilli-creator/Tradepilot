@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🔷Tradepilot</title>
+  <link rel="stylesheet" href="../styles/dashboard.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+<div class="topbar">
+  <div class="account-info">
+    <span id="accountId">Account: VRTC14409258</span>
+    <span id="balance">Balance: USD 298.32</span>
+    <span id="accountStatus">Status: Live</span>
+  </div>
+  <div class="logout">
+    <button id="logoutBtn">Logout</button>
+  </div>
+</div>
+
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard">
+
+    <!-- Dashboard Title -->
+    <h1 class="section-title">🔷 Tradepilot Over/Under</h1>
+
+    <!-- Trade Controls -->
+    <div class="panel controls">
+      <h2>Trade Controls</h2>
+      <p>Status: <span id="tradeStatus">Idle</span></p>
+
+      <label for="market">Select Market:</label><br>
+      <select id="market">
+        <option value="R_100">Step Index 100</option>
+        <option value="frxEURUSD">EUR/USD</option>
+        <option value="frxGBPUSD">GBP/USD</option>
+      </select>
+      <br><br>
+
+      <label for="stake">Enter Stake (USD):</label><br>
+      <input type="number" id="stake" value="10" min="1">
+      <br><br>
+
+      <button id="runBtn" onclick="runBot()">RUN</button>
+    </div>
+
+    <!-- Momentum Confirmation -->
+    <div class="panel momentum">
+      <h2>Momentum Confirmation</h2>
+      <p id="momentumStatus">Waiting for ticks...</p>
+      <ul id="momentumTicks"></ul>
+    </div>
+
+    <!-- Live Ticks -->
+    <div class="panel ticks">
+      <h2>Live Ticks</h2>
+      <p>Current Price: <span id="currentPrice">--</span></p>
+      <ul id="tickList"></ul>
+    </div>
+
+    <!-- History -->
+    <div class="panel history">
+      <h2>Trade History</h2>
+      <table class="history-table">
+        <thead>
+          <tr><th>Time</th><th>Contract</th><th>Stake</th><th>Result</th></tr>
+        </thead>
+        <tbody id="historyTable">
+          <tr><td colspan="4">No trades yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Update clock in top bar
+    function updateTime(){
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
+      document.getElementById("currentTime").innerText = timeString;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Capture OAuth token from URL (future use)
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if(token){
+      localStorage.setItem("derivToken", token);
+      document.getElementById("tradeStatus").innerText = "Logged in to Deriv ✅";
+    } else {
+      document.getElementById("tradeStatus").innerText = "Not logged in ❌";
+    }
+
+    // Placeholder bot runner
+    function runBot(){
+      let market = document.getElementById("market").value;
+      let stake = document.getElementById("stake").value;
+      document.getElementById("tradeStatus").innerText =
+        "Running bot on " + market + " with stake $" + stake;
+      // Later: connect to Deriv API using token
+    }
+  </script>
+
+</body>
+</html>
