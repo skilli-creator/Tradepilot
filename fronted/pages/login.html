@@ -5,154 +5,145 @@
 <title>🔷Tradepilot</title>
 
 <style>
-
 /* PAGE BACKGROUND */
-
-body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-font-family:Arial, Helvetica, sans-serif;
-background: radial-gradient(circle at center,#0b1f3a,#020617);
-color:white;
+body {
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at center,#0b1f3a,#020617);
+  color:white;
 }
 
 /* FLOATING LOGIN BOX */
-
-.login-container{
-width:360px;
-padding:40px;
-border-radius:14px;
-background:rgba(10,20,40,0.6);
-backdrop-filter: blur(10px);
-box-shadow:0 20px 40px rgba(0,0,0,0.7);
-text-align:center;
+.login-container {
+  width:360px;
+  padding:40px;
+  border-radius:14px;
+  background:rgba(10,20,40,0.6);
+  backdrop-filter: blur(10px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.7);
+  text-align:center;
 }
 
 /* TITLE */
-
-.login-container h2{
-margin-bottom:25px;
+.login-container h2 {
+  margin-bottom:25px;
 }
 
 /* INPUTS */
-
-.input-group{
-margin-bottom:18px;
-text-align:left;
+.input-group {
+  margin-bottom:18px;
+  text-align:left;
 }
-
-.input-group label{
-font-size:14px;
-color:#9ca3af;
+.input-group label {
+  font-size:14px;
+  color:#9ca3af;
 }
-
-.input-group input{
-width:100%;
-padding:10px;
-margin-top:6px;
-border-radius:6px;
-border:1px solid rgba(255,255,255,0.1);
-background:#081a33;
-color:white;
-outline:none;
+.input-group input {
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#081a33;
+  color:white;
+  outline:none;
 }
 
 /* BUTTON */
-
-.login-btn{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#2563eb;
-color:white;
-font-size:15px;
-cursor:pointer;
-transition:0.3s;
+.login-btn {
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
 }
-
-.login-btn:hover{
-background:#1d4ed8;
+.login-btn:hover {
+  background:#1d4ed8;
 }
 
 /* FOOTER TEXT */
-
-.footer-text{
-margin-top:18px;
-font-size:13px;
-color:#9ca3af;
+.footer-text {
+  margin-top:18px;
+  font-size:13px;
+  color:#9ca3af;
 }
-
+.footer-text a {
+  color:#3b82f6;
+  text-decoration:none;
+}
 </style>
-
 </head>
 
 <body>
-
 <div class="login-container">
+  <h2>Tradepilot Login</h2>
 
-<h2>Tradepilot Login</h2>
+  <form id="loginForm">
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" required>
+    </div>
 
-<form id="loginForm">
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" required>
+    </div>
 
-<div class="input-group">
-<label>Email</label>
-<input type="email" id="email" required>
-</div>
+    <button class="login-btn" type="submit">Login</button>
+  </form>
 
-<div class="input-group">
-<label>Password</label>
-<input type="password" id="password" required>
-</div>
+  <p id="loginMessage"></p>
 
-<button class="login-btn" type="submit">
-Login
-</button>
-
-</form>
-
-
-<div class="footer-text">
-Don't have an account?
-<a href="register.html">Sign up</a>
-</div>
-
+  <div class="footer-text">
+    Don't have an account? <a href="register.html">Sign up</a>
+  </div>
 </div>
 
 <script>
-
 /* LOGIN HANDLER */
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
 
-document.getElementById("loginForm").addEventListener("submit",function(e){
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
-e.preventDefault()
+  try {
+    const res = await fetch("http://127.0.0.1:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
 
-let email=document.getElementById("email").value
-let username=email.split("@")[0]
+    const data = await res.json();
+    document.getElementById("loginMessage").innerText = data.message || data.error;
 
-/* SAVE USER DATA */
-
-localStorage.setItem("username",username)
-localStorage.setItem("email",email)
-
-/* REDIRECT TO DASHBOARD */
-
-window.location.href="dashboard.html"
-
-})
-
+    if (res.status === 200) {
+      // Redirect to dashboard after successful login
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    }
+  } catch (err) {
+    document.getElementById("loginMessage").innerText = "Server error. Please try again.";
+  }
+});
 </script>
-<div id="footer"></div>
 
+<div id="footer"></div>
 <script>
 fetch("../components/footer.html")
-.then(res => res.text())
-.then(data => {
+  .then(res => res.text())
+  .then(data => {
     document.getElementById("footer").innerHTML = data;
-});
+  });
 </script>
 </body>
 </html>

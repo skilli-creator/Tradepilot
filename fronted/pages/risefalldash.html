@@ -8,17 +8,15 @@
 <body>
 
   <!-- Top Bar -->
-<div class="topbar">
-  <div class="account-info">
-    <span id="accountId">Account: VRTC14409258</span>
-    <span id="balance">Balance: USD 298.32</span>
-    <span id="accountStatus">Status: Live</span>
-  </div>
-  <div class="logout">
-    <button id="logoutBtn">Logout</button>
-  </div>
-</div>
-
+  <div class="topbar">
+    <div class="account-info">
+      <span id="accountId">Account: VRTC14409258</span>
+      <span id="balance">Balance: Loading...</span>
+      <span id="accountStatus">Status: Live</span>
+    </div>
+    <div class="logout">
+      <button id="logoutBtn">Logout</button>
+    </div>
   </div>
 
   <!-- Dashboard Grid -->
@@ -78,15 +76,6 @@
 
   <!-- Scripts -->
   <script>
-    // Update clock in top bar
-    function updateTime(){
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
-      document.getElementById("currentTime").innerText = timeString;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-
     // Capture OAuth token from URL (future use)
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
@@ -98,13 +87,39 @@
       document.getElementById("tradeStatus").innerText = "Not logged in ❌";
     }
 
+    // Fetch balance from backend
+    async function fetchBalance() {
+      const token = localStorage.getItem("derivToken");
+
+      if (!token) {
+        document.getElementById("balance").innerText = "Balance: No token found ❌";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:5000/api/deriv/balance?token=${token}`);
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("balance").innerText = "Balance: Error ❌";
+        } else {
+          document.getElementById("balance").innerText = "Balance: USD " + data.balance;
+        }
+      } catch (err) {
+        document.getElementById("balance").innerText = "Balance: Connection error ❌";
+      }
+    }
+
+    // Run on page load
+    fetchBalance();
+
     // Placeholder bot runner
     function runBot(){
       let market = document.getElementById("market").value;
       let stake = document.getElementById("stake").value;
       document.getElementById("tradeStatus").innerText =
         "Running bot on " + market + " with stake $" + stake;
-      // Later: connect to Deriv API using token
+      // Later: connect to backend /api/deriv/trade
     }
   </script>
 
