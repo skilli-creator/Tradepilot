@@ -116,7 +116,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   let password = document.getElementById("password").value;
 
   try {
-    const res = await fetch("http://102.0.28.126:5000/login", {
+    const res = await fetch("http://10.10.115.95:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
