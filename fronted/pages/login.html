@@ -126,10 +126,13 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     document.getElementById("loginMessage").innerText = data.message || data.error;
 
     if (res.status === 200) {
+      // Save username in sessionStorage
+      sessionStorage.setItem("username", data.username);
+
       // Redirect to dashboard after successful login
       setTimeout(() => {
         window.location.href = "dashboard.html";
-      }, 1500);
+      }, 1000);
     }
   } catch (err) {
     document.getElementById("loginMessage").innerText = "Server error. Please try again.";
