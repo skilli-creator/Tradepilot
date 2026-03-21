@@ -13,19 +13,6 @@ body{
   color:white;
 }
 
-/* top bar */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px 60px;
-}
-
-.user-info{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
 
 .profile-pic{
   width:45px;
@@ -92,6 +79,12 @@ body{
   color:#9ca3af;
   font-size:14px;
 }
+@media (max-width: 600px) {
+  .market-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -101,12 +94,7 @@ body{
 <div class="topbar">
   <div>
     <h2>Welcome, <span id="username">Trader</span> 👋</h2>
-  </div>
-  <div class="user-info">
-    <img id="profilePic" class="profile-pic">
-  </div>
-</div>
-
+  
 <!-- SLOGAN -->
 <div class="slogan">
 "Trade Smart. Stay Disciplined. Let the Market Reward Your Patience."
@@ -130,8 +118,8 @@ Select a market to start trading
       <div class="market-desc">Crypto spot and futures trading</div>
     </div>
 
-    <div class="market-card" onclick="openMarket('crypto')">
-      <div class="market-title">Cryptocurrency</div>
+    <div class="market-card" onclick="openMarket('coinbase')">
+      <div class="market-title">Coinbase</div>
       <div class="market-desc">Bitcoin, Ethereum and altcoins</div>
     </div>
 
@@ -169,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function openMarket(market){
   if(market=="deriv"){ window.location.href="deriv.html"; }
   if(market=="binance"){ window.location.href="binance.html"; }
-  if(market=="crypto"){ window.location.href="crypto.html"; }
+  if(market=="coinbase"){ window.location.href="coinbase.html"; }
   if(market=="forex"){ window.location.href="forex.html"; }
 }
 </script>
