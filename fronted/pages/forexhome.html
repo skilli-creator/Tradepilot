@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔷Tradepilot</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at top, #0a1a2f, #020617);
+    color:white;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:40px;
+    text-align:center;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 16px;
+    border-radius:20px;
+    background:#0f2a44;
+    color:#7dd3fc;
+    font-size:14px;
+}
+
+h1{
+    font-size:60px;
+    margin:20px 0;
+}
+
+.highlight{
+    color:#38bdf8;
+}
+
+.subtitle{
+    color:#9ca3af;
+    max-width:700px;
+    margin:auto;
+    margin-bottom:30px;
+}
+
+.button{
+    display:inline-block;
+    padding:16px 32px;
+    background:#0ea5e9;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.cards{
+    display:flex;
+    gap:30px;
+    margin-top:60px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.card{
+    background:#0b1626;
+    padding:30px;
+    width:300px;
+    border-radius:15px;
+    text-align:left;
+}
+
+.card h3{
+    margin-top:0;
+}
+
+.card p{
+    color:#9ca3af;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div>
+<h2>🔷Tradepilot</h2>
+</div>
+
+
+</div>
+
+<div class="container">
+
+<div class="badge">AI-Powered Forex Trading Signals</div>
+
+<h1>Win More on <span class="highlight">Forex</span></h1>
+
+<p class="subtitle">
+AI-powered signals for smarter all trades entries with dual-thread simultaneous contract deployment.
+</p>
+
+<a href="forexdash.html" class="button">Connect Forex Account</a>
+<br>
+<br>
+<div class="account-signup">
+    Don't have a Forex account? <a href="https://www.exness.com/?utm_source=chatgpt.com" target="_blank" class="signup-link">Sign up here</a>
+  </div>
+
+
+<div class="cards">
+
+<div class="card">
+<h3>All Trades Engine</h3>
+<p>Executes all types of trades with smart controls and reliable order flow.</p>
+</div>
+
+<div class="card">
+<h3>High-Spec Analysis</h3>
+<p>Real-time market analysis and confidence view to help pick better entries.</p>
+</div>
+
+<div class="card">
+<h3>Quick Forex Connect</h3>
+<p>Secure OAuth login so you don't need to copy API tokens manually.</p>
+</div>
+
+</div>
+
+</div>
+<div id="footer"></div>
+
+<script>
+fetch("../components/footer.html")
+.then(res => res.text())
+.then(data => {
+    document.getElementById("footer").innerHTML = data;
+});
+</script>
+</body>
+</html>

@@ -133,7 +133,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
   }
 
   try {
-    const res = await fetch("http://10.10.115.95:5000/signup", {
+    const res = await fetch("http://192.168.0.101:5000/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password })
