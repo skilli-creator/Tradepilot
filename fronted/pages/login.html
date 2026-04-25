@@ -108,36 +108,27 @@ body {
 </div>
 
 <script>
-/* LOGIN HANDLER */
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
+/* FAKE LOGIN HANDLER */
+document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
-  try {
-    const res = await fetch("http://192.168.0.101:5000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+  // Fake login: always succeeds
+  document.getElementById("loginMessage").innerText =
+    "Logged in successfully as " + email;
+  document.getElementById("loginMessage").style.color = "lightgreen";
 
-    const data = await res.json();
-    document.getElementById("loginMessage").innerText = data.message || data.error;
+  // Save username in sessionStorage
+  sessionStorage.setItem("username", email);
 
-    if (res.status === 200) {
-      // Save username in sessionStorage
-      sessionStorage.setItem("username", data.username);
-
-      // Redirect to dashboard after successful login
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1000);
-    }
-  } catch (err) {
-    document.getElementById("loginMessage").innerText = "Server error. Please try again.";
-  }
+  // Redirect to dashboard after successful login
+  setTimeout(() => {
+    window.location.href = "marketsdash.html";
+  }, 1000);
 });
+
 </script>
 
 <div id="footer"></div>
