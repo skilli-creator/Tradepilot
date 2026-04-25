@@ -94,7 +94,132 @@
             background: black;
             color: #94a3b8;
         }
+        /* GLOBAL IMPROVEMENTS */
 
+        /* SMOOTH SCROLL */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* HERO ANIMATION */
+        .hero {
+            text-align: center;
+            padding: 120px 20px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            background: linear-gradient(90deg, #22c55e, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            margin: 10px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #22c55e;
+            color: black;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #22c55e;
+        }
+
+        .btn-secondary {
+            border: 1px solid white;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: black;
+        }
+
+        /* GLASS CARDS */
+        .feature {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 14px;
+            transition: 0.4s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(34,197,94,0.4);
+        }
+
+        /* GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+            gap: 30px;
+        }
+
+        /* IMAGE ANIMATION */
+        img {
+            transition: 0.4s;
+        }
+
+        img:hover {
+            transform: scale(1.03);
+        }
+
+        /* SECTION FADE-IN */
+        .animate {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 1s ease forwards;
+        }
+
+        section:nth-child(1) { animation-delay: 0.2s; }
+        section:nth-child(2) { animation-delay: 0.4s; }
+        section:nth-child(3) { animation-delay: 0.6s; }
+        section:nth-child(4) { animation-delay: 0.8s; }
+
+        /* STATS */
+        h1 {
+            color: #22c55e;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(90deg, #22c55e, #38bdf8);
+            color: black;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {opacity:0;}
+            to {opacity:1;}
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+                
     
     </style>
 </head>
@@ -177,6 +302,125 @@
         <h3>3️⃣ Monitor Profits</h3>
         <p>Track performance with live analytics.</p>
     </div>
+     <!-- MARKET PREVIEW -->
+<section style="padding:80px 0;background:#020617;">
+  <div class="container" style="text-align:center;">
+    
+    <h2 style="font-size:32px;margin-bottom:20px;">
+      Trade Global Markets in Real-Time
+    </h2>
+    
+    <p style="color:#94a3b8;margin-bottom:40px;">
+      Forex, Crypto, Synthetic Indices — all in one powerful platform.
+    </p>
+
+    <img src="https://images.unsplash.com/photo-1642543348745-4d1e7f0e2c67"
+         style="width:100%;max-width:900px;border-radius:12px;">
+  </div>
+</section>
+
+
+<!-- WHY TRADEPILOT -->
+<section style="padding:80px 0;">
+  <div class="container">
+
+    <h2 style="text-align:center;margin-bottom:50px;">
+      Why Traders Choose Tradepilot
+    </h2>
+
+    <div class="feature-grid">
+
+      <div class="feature">
+        <h3>⚡ Fast Execution</h3>
+        <p>Execute trades instantly with low latency infrastructure.</p>
+      </div>
+
+      <div class="feature">
+        <h3>📡 AI Signals</h3>
+        <p>Advanced algorithms analyze markets and generate signals.</p>
+      </div>
+
+      <div class="feature">
+        <h3>🔐 Secure Platform</h3>
+        <p>Bank-level encryption keeps your data and funds protected.</p>
+      </div>
+
+      <div class="feature">
+        <h3>📈 Multi-Market Access</h3>
+        <p>Trade Forex, Crypto, Deriv indices and more.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- LIVE TRADING FEEL -->
+<section style="padding:80px 0;background:#020617;">
+  <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;">
+
+    <div>
+      <h2>Built for Real Traders</h2>
+      <p style="color:#94a3b8;margin-top:15px;">
+        Tradepilot gives you full control of your strategy.
+        Monitor charts, automate trades, and react to markets instantly.
+      </p>
+
+      <a href="fronted/pages/register.html" class="btn btn-primary">
+        Get Started
+      </a>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3"
+         style="width:100%;border-radius:12px;">
+  </div>
+</section>
+
+
+<!-- STATS SECTION -->
+<section style="padding:80px 0;text-align:center;">
+  <div class="container">
+
+    <h2>Platform Growth</h2>
+
+    <div style="display:flex;justify-content:space-around;margin-top:40px;flex-wrap:wrap;gap:20px;">
+
+      <div>
+        <h1>10K+</h1>
+        <p style="color:#94a3b8;">Active Traders</p>
+      </div>
+
+      <div>
+        <h1>$2M+</h1>
+        <p style="color:#94a3b8;">Trades Executed</p>
+      </div>
+
+      <div>
+        <h1>99.9%</h1>
+        <p style="color:#94a3b8;">Uptime</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section style="padding:100px 20px;text-align:center;background:#22c55e;color:black;">
+  
+  <h2 style="font-size:32px;margin-bottom:20px;">
+    Start Trading Smarter Today
+  </h2>
+
+  <p style="margin-bottom:30px;">
+    Join thousands of traders using Tradepilot to automate and grow.
+  </p>
+
+  <a href="fronted/pages/register.html" class="btn btn-secondary" style="border-color:black;color:black;">
+    Create Free Account
+  </a>
+
+    
 </section>
 
 
