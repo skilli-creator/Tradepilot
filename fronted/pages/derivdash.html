@@ -254,13 +254,13 @@ td, th {
       </select>
     </div>
 
-    <!-- MANUAL MODE INPUT (ONLY HERE) -->
+    <!-- MANUAL MODE ONLY -->
     <div class="input-group" id="manualStakeGroup">
       <label>Stake (Manual Mode)</label>
       <input type="number" id="stake" placeholder="Enter stake">
     </div>
 
-    <!-- AUTOMATIC MODE STAKE SYSTEM -->
+    <!-- AUTOMATIC MODE ONLY -->
     <div class="input-group" id="autoStakeGroup">
       <label>Stake Mode (Automatic)</label>
 
@@ -355,7 +355,13 @@ td, th {
 let mode = "manual";
 let stakeMode = "auto";
 
-/* MODE */
+/* SAFE INITIAL STATE */
+window.onload = function () {
+  setMode("manual");
+  setStakeMode("auto");
+};
+
+/* MODE SWITCH */
 function setMode(m){
   mode = m;
 
@@ -369,7 +375,7 @@ function setMode(m){
     m==="automatic" ? "block" : "none";
 }
 
-/* STAKE MODE (AUTO / MANUAL) */
+/* STAKE MODE */
 function setStakeMode(m){
   stakeMode = m;
 
