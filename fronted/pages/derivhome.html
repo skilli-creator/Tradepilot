@@ -43,12 +43,13 @@ h1{
     color:#9ca3af;
     max-width:700px;
     margin:auto;
-    margin-bottom:30px;
+    margin-bottom:40px;
 }
 
+/* BUTTONS */
 .button{
     display:inline-block;
-    padding:16px 32px;
+    padding:14px 28px;
     background:#0ea5e9;
     color:white;
     border-radius:10px;
@@ -56,8 +57,15 @@ h1{
     font-weight:bold;
     cursor:pointer;
     border:none;
+    margin:10px;
 }
 
+.secondary-btn{
+    background:#1e293b;
+    border:1px solid #334155;
+}
+
+/* CARD SECTION */
 .cards{
     display:flex;
     gap:30px;
@@ -82,28 +90,38 @@ h1{
     color:#9ca3af;
 }
 
-/* TOKEN BOX */
+/* TOKEN INPUT */
 .token-box{
     margin-top:25px;
 }
 
 input{
     padding:14px;
-    width:320px;
+    width:340px;
     border-radius:8px;
     border:none;
     outline:none;
-    margin-bottom:15px;
+    margin-top:10px;
     text-align:center;
     background:#0b1626;
     color:white;
     border:1px solid #1e293b;
 }
 
+/* SECTION TITLE */
+.section-title{
+    margin-top:40px;
+    font-size:18px;
+    color:#94a3b8;
+}
+
+/* POWERED BY */
 .powered{
-    margin-top:50px;
+    margin-top:70px;
     font-size:13px;
     color:#64748b;
+    padding-top:20px;
+    border-top:1px solid #1e293b;
 }
 
 .powered span{
@@ -127,27 +145,39 @@ input{
 Tradepilot AI — guiding your moves with precision and executing multiple contracts at once.
 </p>
 
-<!-- 🔐 TOKEN LOGIN -->
+<!-- ========================= -->
+<!-- LOGIN METHODS -->
+<!-- ========================= -->
+
+<div class="section-title">Choose how to connect your Deriv account</div>
+<br />
+
+<!-- OAuth -->
+<div>
+    <button class="button" onclick="connectOAuth()">
+        🔵 Connect via Deriv OAuth (Recommended)
+    </button>
+</div>
+
+<!-- OR -->
+<p style="color:#64748b;margin:15px 0;">OR</p>
+
+<!-- TOKEN -->
 <div class="token-box">
 
     <input type="text" id="apiToken" placeholder="Paste your Deriv API Token">
 
     <br>
 
-    <button class="button" onclick="connectDeriv()">
-        Connect Deriv Account
+    <button class="button secondary-btn" onclick="connectToken()">
+        🔐 Connect with API Token
     </button>
 
 </div>
 
-<br>
-
-<div class="account-signup">
-    Don't have a Deriv account?
-    <a href="https://deriv.com" target="_blank" style="color:#38bdf8;">
-        Sign up here
-    </a>
-</div>
+<!-- ========================= -->
+<!-- INFO CARDS -->
+<!-- ========================= -->
 
 <div class="cards">
 
@@ -162,35 +192,51 @@ Tradepilot AI — guiding your moves with precision and executing multiple contr
 </div>
 
 <div class="card">
-<h3>Quick Deriv Connect</h3>
-<p>Secure API token login for instant dashboard access.</p>
+<h3>Secure Connection Layer</h3>
+<p>Supports OAuth authentication and API token integration for flexibility.</p>
 </div>
 
 </div>
 
-<!-- POWERED BY -->
+<!-- ========================= -->
+<!-- POWERED BY DERIV -->
+<!-- ========================= -->
+
 <div class="powered">
-    Powered by <span>Deriv</span>
+    Powered by <span>Deriv</span> — All trading actions are executed on Deriv’s official infrastructure. Trade responsibly.
 </div>
 
 </div>
 
 <script>
-function connectDeriv(){
+
+/* OAuth FLOW (placeholder for real integration) */
+function connectOAuth(){
+    alert("Redirecting to Deriv OAuth login...");
+    
+    // Later you will replace this with real OAuth redirect:
+    // window.location.href = "https://oauth.deriv.com/authorize?..."
+
+    setTimeout(()=>{
+        window.location.href = "derivdash.html";
+    },1000);
+}
+
+/* TOKEN FLOW */
+function connectToken(){
 
     const token = document.getElementById("apiToken").value;
 
     if(!token){
-        alert("Please enter your Deriv API token");
+        alert("Please paste your Deriv API token");
         return;
     }
 
-    // Save token for dashboard
     localStorage.setItem("deriv_token", token);
 
-    // Redirect to dashboard
     window.location.href = "derivdash.html";
 }
+
 </script>
 
 </body>
