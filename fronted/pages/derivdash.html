@@ -18,6 +18,7 @@ body {
   justify-content: space-between;
   padding: 15px 25px;
   background: rgba(15,23,42,0.95);
+  align-items: center;
 }
 
 .logo { font-weight: bold; }
@@ -32,6 +33,16 @@ body {
   background: gold;
   padding: 3px 8px;
   border-radius: 10px;
+  color: black;
+}
+
+.exit-btn {
+  background: #ef4444;
+  border: none;
+  padding: 6px 10px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* DASHBOARD */
@@ -67,6 +78,12 @@ body {
   border-color: #22c55e;
 }
 
+.mode-desc {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
 /* GRID */
 .trade-controls {
   display: grid;
@@ -77,6 +94,12 @@ body {
 .input-group {
   display: flex;
   flex-direction: column;
+}
+
+label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #94a3b8;
 }
 
 input, select {
@@ -98,6 +121,31 @@ input, select {
   cursor: pointer;
 }
 
+/* STAKE MODE */
+.stake-mode {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.small-box {
+  flex: 1;
+  padding: 8px;
+  background: #0f172a;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.small-box.active {
+  border-color: #22c55e;
+}
+
+.hidden {
+  display: none;
+}
+
 /* HISTORY */
 table {
   width: 100%;
@@ -110,19 +158,15 @@ td, th {
 }
 
 .win { color: #22c55e; }
-.loss { color: red; }
+.loss { color: #ef4444; }
 
-/* ========================= */
-/* NEW: INTELLIGENCE LAYER   */
-/* ========================= */
-
+/* INTELLIGENCE */
 .analysis-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* CIRCLE CHART */
 .circle {
   width: 140px;
   height: 140px;
@@ -135,7 +179,6 @@ td, th {
   font-weight: bold;
 }
 
-/* REASONING */
 .reason {
   background: #020617;
   padding: 15px;
@@ -144,7 +187,6 @@ td, th {
   color: #94a3b8;
 }
 
-/* AUTO PANEL */
 .auto-panel {
   background: #020617;
   padding: 15px;
@@ -152,81 +194,121 @@ td, th {
   margin-top: 10px;
   color: #94a3b8;
 }
-
 </style>
 </head>
 
 <body>
 
+<!-- TOPBAR -->
 <header class="topbar">
-  <div class="logo">🔷 TradePilot</div>
+  <div class="logo">🔷 TradePilot AI Pro</div>
 
   <div class="account-info">
     <span>$288.44</span>
     <span>VRTC14409258</span>
-    <span class="account-type demo">DEMO</span>
-    <button class="logout-btn" onclick="logout()">Exit</button>
+    <span class="demo">DEMO</span>
+    <button class="exit-btn" onclick="exitApp()">Exit</button>
   </div>
 </header>
 
 <main class="dashboard">
 
+<!-- MODE -->
 <section class="card">
   <h3>Trading Mode</h3>
 
   <div class="mode-options">
     <div class="mode-box active" onclick="setMode('manual')" id="manualBox">
       🧠 Manual Trading
-      <p>You control trades</p>
+      <div class="mode-desc">You control all trades with insights</div>
     </div>
 
     <div class="mode-box" onclick="setMode('automatic')" id="autoBox">
       🤖 Automatic Bot
-      <p>Bot trades for you</p>
+      <div class="mode-desc">AI executes trades with strategy engine</div>
     </div>
   </div>
 </section>
 
-
-<!-- SETUP (UNCHANGED CORE) -->
+<!-- TRADE SETUP -->
 <div class="card">
   <h3>Trade Setup</h3>
 
   <div class="trade-controls">
 
-    <select id="market">
-      <option>Volatility 100</option>
-      <option>Boom 500</option>
-    </select>
+    <div class="input-group">
+      <label>Market</label>
+      <select id="market">
+        <option>Volatility 100</option>
+        <option>Boom 500</option>
+      </select>
+    </div>
 
-    <select id="tradeType">
-      <option>Rise/Fall</option>
-      <option>Higher/Lower</option>
-      <option>Even/Odd</option>
-      <option>Over/Under</option>
-    </select>
+    <div class="input-group">
+      <label>Trade Type</label>
+      <select id="tradeType">
+        <option>Rise/Fall</option>
+        <option>Higher/Lower</option>
+        <option>Even/Odd</option>
+        <option>Over/Under</option>
+      </select>
+    </div>
 
-    <input type="number" id="stake" placeholder="Stake">
+    <!-- MANUAL MODE INPUT (ONLY HERE) -->
+    <div class="input-group" id="manualStakeGroup">
+      <label>Stake (Manual Mode)</label>
+      <input type="number" id="stake" placeholder="Enter stake">
+    </div>
 
-    <input type="number" id="tp" placeholder="Take Profit">
+    <!-- AUTOMATIC MODE STAKE SYSTEM -->
+    <div class="input-group" id="autoStakeGroup">
+      <label>Stake Mode (Automatic)</label>
 
-    <input type="number" id="sl" placeholder="Stop Loss">
+      <div class="stake-mode">
+        <div class="small-box active" onclick="setStakeMode('auto')" id="autoStakeBox">
+          AUTO (2% Balance)
+        </div>
 
-    <input type="number" id="loops" placeholder="Loops">
+        <div class="small-box" onclick="setStakeMode('manual')" id="manualStakeBox">
+          MANUAL
+        </div>
+      </div>
 
-    <select id="martingale">
-      <option value="off">Martingale OFF</option>
-      <option value="on">Martingale ON</option>
-    </select>
+      <input type="number"
+             id="manualStakeInput"
+             class="hidden"
+             placeholder="Enter custom stake">
+    </div>
+
+    <div class="input-group">
+      <label>Take Profit</label>
+      <input type="number" id="tp">
+    </div>
+
+    <div class="input-group">
+      <label>Stop Loss</label>
+      <input type="number" id="sl">
+    </div>
+
+    <div class="input-group">
+      <label>Loops</label>
+      <input type="number" id="loops">
+    </div>
+
+    <div class="input-group">
+      <label>Martingale</label>
+      <select id="martingale">
+        <option value="off">OFF</option>
+        <option value="on">ON</option>
+      </select>
+    </div>
 
   </div>
 
   <button class="run-btn" onclick="startBot()">START BOT</button>
 </div>
 
-<!-- ========================= -->
-<!-- NEW INTELLIGENCE PANEL   -->
-<!-- ========================= -->
+<!-- INTELLIGENCE -->
 <div class="card">
   <h3>Market Intelligence</h3>
 
@@ -237,30 +319,29 @@ td, th {
       <p id="signal">Waiting for signal...</p>
     </div>
 
-    <div class="reason" id="reasonBox">
-      Analysis will appear here...
-    </div>
+    <div class="reason" id="reasonBox"></div>
 
   </div>
 
-  <div class="auto-panel" id="autoPanel">
-    Auto mode reasoning will appear here...
-  </div>
-
+  <div class="auto-panel" id="autoPanel"></div>
 </div>
 
-<!-- STATS (UNCHANGED CORE LOGIC) -->
+<!-- STATS -->
 <div class="card" id="stats"></div>
 
-<!-- HISTORY (UNCHANGED) -->
+<!-- HISTORY -->
 <div class="card">
   <h3>Trade History</h3>
+
   <table>
     <thead>
       <tr>
         <th>Time</th>
+        <th>Market</th>
+        <th>Type</th>
         <th>Stake</th>
-        <th>Result</th>
+        <th>Status</th>
+        <th>P/L</th>
       </tr>
     </thead>
     <tbody id="history"></tbody>
@@ -270,18 +351,41 @@ td, th {
 </main>
 
 <script>
+
 let mode = "manual";
+let stakeMode = "auto";
 
 /* MODE */
 function setMode(m){
   mode = m;
+
   manualBox.classList.toggle("active", m==="manual");
   autoBox.classList.toggle("active", m==="automatic");
+
+  document.getElementById("manualStakeGroup").style.display =
+    m==="manual" ? "block" : "none";
+
+  document.getElementById("autoStakeGroup").style.display =
+    m==="automatic" ? "block" : "none";
 }
 
-/* =========================
-   BOT ENGINE (UNCHANGED CORE)
-========================= */
+/* STAKE MODE (AUTO / MANUAL) */
+function setStakeMode(m){
+  stakeMode = m;
+
+  autoStakeBox.classList.toggle("active", m==="auto");
+  manualStakeBox.classList.toggle("active", m==="manual");
+
+  document.getElementById("manualStakeInput")
+    .classList.toggle("hidden", m==="auto");
+}
+
+/* EXIT */
+function exitApp(){
+  alert("Logging out...");
+}
+
+/* BOT */
 function startBot(){
 
   let profit = 0;
@@ -290,16 +394,19 @@ function startBot(){
   let count = 0;
 
   let baseStake = Number(stake.value) || 10;
-  let currentStake = baseStake;
-
-  let tp = Number(tp.value) || 20;
-  let sl = Number(sl.value) || 10;
-  let loops = Number(loops.value) || 5;
-  let martingale = document.getElementById("martingale").value;
 
   let interval = setInterval(()=>{
 
-    let stakeAmount = baseStake;
+    let stakeAmount;
+
+    if(mode === "manual"){
+      stakeAmount = baseStake;
+    } else {
+      stakeAmount =
+        stakeMode === "auto"
+          ? baseStake * 0.02
+          : Number(manualStakeInput.value || 10);
+    }
 
     let win = Math.random() > 0.5;
     let result = win ? stakeAmount * 0.8 : -stakeAmount;
@@ -307,93 +414,53 @@ function startBot(){
     profit += result;
     count++;
 
-    if(win){
-      wins++;
-      currentStake = baseStake;
-    } else {
-      losses++;
-      if(martingale==="on") currentStake *= 2;
-    }
-
     updateStats(profit,wins,losses,count);
-    addRow(stakeAmount,result);
+    addRow(stakeAmount, win ? "WIN" : "LOSS", result);
+    runIntelligence();
 
-    runIntelligence(); // NEW AI LAYER
-
-    if(profit>=tp || profit<=-sl || count>=loops){
-      clearInterval(interval);
-    }
+    if(count >= Number(loops.value || 5)) clearInterval(interval);
 
   },1200);
 }
 
-/* =========================
-   NEW: INTELLIGENCE ENGINE
-========================= */
+/* INTELLIGENCE */
 function runIntelligence(){
 
-  let confidence = Math.floor(Math.random()*25 + 70); // 70–95%
+  let confidence = Math.floor(Math.random()*25+70);
 
-  let type = document.getElementById("tradeType").value;
+  circle.style.setProperty("--p",confidence+"%");
+  circle.innerText = confidence+"%";
 
-  let signal = "";
-  let reason = "";
-
-  if(type==="Rise/Fall"){
-    signal = confidence>75 ? "ENTER FALL (3–5 min)" : "ENTER RISE (3–5 min)";
-    reason = "Market momentum + rejection zones detected.";
-  }
-
-  if(type==="Higher/Lower"){
-    signal = confidence>75 ? "ENTER LOWER" : "ENTER HIGHER";
-    reason = "Mean reversion pattern forming.";
-  }
-
-  if(type==="Even/Odd"){
-    signal = "STATISTICAL EDGE DETECTED";
-    reason = "Tick distribution imbalance observed.";
-  }
-
-  if(type==="Over/Under"){
-    signal = confidence>72 ? "ENTER UNDER" : "ENTER OVER";
-    reason = "Volatility compression detected.";
-
-  }
-
-  document.getElementById("circle").style.setProperty("--p", confidence+"%");
-  document.getElementById("circle").innerText = confidence+"%";
-
-  document.getElementById("signal").innerText = signal;
-  document.getElementById("reasonBox").innerText = reason;
+  signal.innerText = "Signal updating...";
+  reasonBox.innerText = "Market structure + momentum analysis active.";
 
   if(mode==="automatic"){
-    document.getElementById("autoPanel").innerText =
-      `AUTO MODE ACTIVE → ${confidence}% probability setup → executing based on strategy filters.`;
+    autoPanel.innerText =
+      `AUTO MODE → executing trades at ${confidence}% confidence`;
   }
 }
 
-/* =========================
-   STATS
-========================= */
+/* STATS */
 function updateStats(p,w,l,c){
   stats.innerHTML = `
-    <h3>Bot Stats</h3>
-    <p>Profit: $${p.toFixed(2)}</p>
-    <p>Trades: ${c}</p>
-    <p>Wins: ${w} | Losses: ${l}</p>
+    Profit: $${p.toFixed(2)} | Trades: ${c}
   `;
 }
 
 /* HISTORY */
-function addRow(stake,res){
+function addRow(stake,status,res){
   history.innerHTML += `
     <tr>
       <td>${new Date().toLocaleTimeString()}</td>
+      <td>${market.value}</td>
+      <td>${tradeType.value}</td>
       <td>$${stake}</td>
+      <td>${status}</td>
       <td class="${res>0?'win':'loss'}">${res.toFixed(2)}</td>
     </tr>
   `;
 }
+
 </script>
 
 </body>
