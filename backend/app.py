@@ -1,5 +1,5 @@
 from flask import Flask
-from backend.routes.bot_routes import bot_bp
+from backend.bot_routes import bot_bp
 
 def create_app():
 

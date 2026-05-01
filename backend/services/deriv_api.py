@@ -3,7 +3,7 @@ import json
 import threading
 import time
 
-from backend.state.bot_state import BotState
+from backend.bot_state import BotState
 
 DERIV_APP_ID = "1089"
 DERIV_WS_URL = f"wss://ws.derivws.com/websockets/v3?app_id={DERIV_APP_ID}"
