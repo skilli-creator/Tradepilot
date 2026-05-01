@@ -134,6 +134,15 @@ input{
 </head>
 
 <body>
+<div class="topbar">
+
+<div>
+<h2>🔷Tradepilot</h2>
+</div>
+
+
+</div>
+
 
 <div class="container">
 
@@ -248,7 +257,29 @@ function connectToken(){
         return;
     }
 
-    localStorage.setItem("deriv_token", token);
+  function connectToken(){
+
+    const token = document.getElementById("apiToken").value;
+
+    if(!token){
+        alert("Please paste your Deriv API token");
+        return;
+    }
+
+    fetch("http://127.0.0.1:5000/api/connect", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        window.location.href = "derivdash.html";
+    })
+    .catch(err => console.error(err));
+}
 
     window.location.href = "derivdash.html";
 }
