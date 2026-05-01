@@ -10,6 +10,7 @@ body {
   margin:0;
   height:100vh;
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
   font-family:Arial, Helvetica, sans-serif;
@@ -79,10 +80,21 @@ body {
   color:#3b82f6;
   text-decoration:none;
 }
+
+/* ✅ NEW FOOTER */
+.main-footer {
+  position:absolute;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+  font-size:13px;
+  color:#64748b;
+}
 </style>
 </head>
 
 <body>
+
 <div class="register-container">
   <h2>Create Account</h2>
 
@@ -117,8 +129,12 @@ body {
   </div>
 </div>
 
+<!-- ✅ NEW INTERNAL FOOTER -->
+<div class="main-footer">
+  © 2026 Tradepilot — Automated Trading Platform
+</div>
+
 <script>
-/* REGISTER HANDLER */
 document.getElementById("registerForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -143,7 +159,6 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     document.getElementById("registerMessage").innerText = data.message || data.error;
 
     if (res.status === 201) {
-      // Redirect to login page after successful signup
       setTimeout(() => {
         window.location.href = "login.html";
       }, 1500);
@@ -154,13 +169,5 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 });
 </script>
 
-<div id="footer"></div>
-<script>
-fetch("../components/footer.html")
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById("footer").innerHTML = data;
-  });
-</script>
 </body>
 </html>

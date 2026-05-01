@@ -13,14 +13,6 @@ body{
   color:white;
 }
 
-
-.profile-pic{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  border:2px solid #22c55e;
-}
-
 /* slogan */
 .slogan{
   text-align:center;
@@ -79,12 +71,22 @@ body{
   color:#9ca3af;
   font-size:14px;
 }
+
+/* ✅ NEW FOOTER */
+.main-footer{
+  position:absolute;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+  font-size:13px;
+  color:#64748b;
+}
+
 @media (max-width: 600px) {
   .market-grid {
     grid-template-columns: 1fr;
   }
 }
-
 </style>
 </head>
 
@@ -94,7 +96,9 @@ body{
 <div class="topbar">
   <div>
     <h2>Welcome, Trader 👋</h2>
-  
+  </div>
+</div>
+
 <!-- SLOGAN -->
 <div class="slogan">
 "Trade Smart. Stay Disciplined. Let the Market Reward Your Patience."
@@ -130,19 +134,22 @@ Select a market to start trading
   </div>
 </div>
 
+<!-- ✅ NEW INTERNAL FOOTER -->
+<div class="main-footer">
+  © 2026 Tradepilot — Automated Trading Platform
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // Get username and email from sessionStorage (set during login)
   const username = sessionStorage.getItem("username");
   const email = sessionStorage.getItem("email");
 
-  // Display username
   if (username) {
     document.getElementById("username").innerText = username;
   }
 
-  // Display profile picture using Gravatar
   if (email) {
     const hash = md5(email.trim().toLowerCase());
     document.getElementById("profilePic").src =
@@ -160,15 +167,6 @@ function openMarket(market){
   if(market=="coinbase"){ window.location.href="coinbasehome.html"; }
   if(market=="forex"){ window.location.href="forexhome.html"; }
 }
-</script>
-
-<div id="footer"></div>
-<script>
-fetch("../components/footer.html")
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById("footer").innerHTML = data;
-  });
 </script>
 
 </body>
