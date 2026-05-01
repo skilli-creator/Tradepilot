@@ -256,13 +256,13 @@ td, th {
 
     <!-- MANUAL MODE ONLY -->
     <div class="input-group" id="manualStakeGroup">
-      <label>Stake (Manual Mode)</label>
+      <label>Stake Mode (Manual only)</label>
       <input type="number" id="stake" placeholder="Enter stake">
     </div>
 
     <!-- AUTOMATIC MODE ONLY -->
     <div class="input-group" id="autoStakeGroup">
-      <label>Stake Mode (Automatic)</label>
+      <label>Stake Mode</label>
 
       <div class="stake-mode">
         <div class="small-box active" onclick="setStakeMode('auto')" id="autoStakeBox">
@@ -282,21 +282,21 @@ td, th {
 
     <div class="input-group">
       <label>Take Profit</label>
-      <input type="number" id="tp">
+      <input type="number" id="tp" placeholder="Secure your profits e.g 50">
     </div>
 
     <div class="input-group">
       <label>Stop Loss</label>
-      <input type="number" id="sl">
+      <input type="number" id="sl" placeholder="Secure your money e.g 20">
     </div>
 
     <div class="input-group">
       <label>Loops</label>
-      <input type="number" id="loops">
+      <input type="number" id="loops" placeholder="Number of trades e.g 5">
     </div>
 
     <div class="input-group">
-      <label>Martingale</label>
+      <label>Martingale(Fast loss recovery)</label>
       <select id="martingale">
         <option value="off">OFF</option>
         <option value="on">ON</option>
