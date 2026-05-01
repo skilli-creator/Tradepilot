@@ -1,9 +1,9 @@
 import time
 
-from backend.state.bot_state import BotState
-from backend.services.strategy_engine import generate_signal
-from backend.services.risk_manager import check_risk
-from backend.services.martingale import next_stake
+from backend.bot_state import BotState
+from backend.strategy_engine import generate_signal
+from backend.risk_manager import check_risk
+from backend.martingale import next_stake
 
 # NEW: Deriv API connection (IMPORTANT)
 from backend.services.deriv_api import DerivAPI

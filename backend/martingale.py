@@ -1,4 +1,4 @@
-def next_stake(current, base, martingale_on, max_limit=8):
+def next_stake(current, base, martingale_on, max_limit=5):
 
     if not martingale_on:
         return base

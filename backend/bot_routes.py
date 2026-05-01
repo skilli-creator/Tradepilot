@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from backend.services.bot_engine import start_bot, stop_bot
-from backend.state.bot_state import BotState
+from backend.bot_engine import start_bot, stop_bot
+from backend.bot_state import BotState
 import threading
 
 bot_bp = Blueprint("bot", __name__)
