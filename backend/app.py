@@ -1,10 +1,20 @@
 from flask import Flask
-from routes.bot_routes import bot_bp
+from backend.config import Config
+from backend.routes.connect import connect_bp
+from flask_cors import CORS
+
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(Config)
 
-    app.register_blueprint(bot_bp, url_prefix="/api/bot")
+    CORS(app)  # 🔥 allow frontend access
+
+    app.register_blueprint(connect_bp)
+
+    @app.route("/")
+    def home():
+        return {"message": "Tradepilot backend running 🚀"}
 
     return app
 

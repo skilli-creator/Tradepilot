@@ -257,15 +257,6 @@ function connectToken(){
         return;
     }
 
-  function connectToken(){
-
-    const token = document.getElementById("apiToken").value;
-
-    if(!token){
-        alert("Please paste your Deriv API token");
-        return;
-    }
-
     fetch("http://127.0.0.1:5000/api/connect", {
         method: "POST",
         headers: {
@@ -275,15 +266,26 @@ function connectToken(){
     })
     .then(res => res.json())
     .then(data => {
+
         console.log(data);
+
+        if(data.status === "success"){
+
+    console.log("USER DATA:", data.user);
+
+    alert(
+        "Account ID: " + data.user.account_id + "\n" +
+        "Balance: " + data.user.balance + "\n" +
+        "Currency: " + data.user.currency + "\n" +
+        "Type: " + data.user.account_type
+    );
+
+    // Delay redirect so you SEE it
+    setTimeout(() => {
         window.location.href = "derivdash.html";
-    })
-    .catch(err => console.error(err));
-}
+    }, 3000);
 
-    window.location.href = "derivdash.html";
 }
-
 </script>
 
 </body>
