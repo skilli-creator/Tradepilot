@@ -198,8 +198,74 @@ td, th {
   margin-top: 10px;
   color: #94a3b8;
 }
+/* INPUT GROUP */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
 
+/* LABEL */
+.input-group label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
 
+/* SELECT WRAPPER */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* SELECT FIELD */
+.select-wrapper select {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  background: #020617;
+  color: #fff;
+  font-size: 14px;
+  appearance: none;
+  outline: none;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+/* HOVER + FOCUS */
+.select-wrapper select:hover {
+  border-color: #334155;
+}
+
+.select-wrapper select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* DROPDOWN GROUP LABEL */
+select optgroup {
+  color: #94a3b8;
+  background: #020617;
+}
+
+/* OPTIONS */
+select option {
+  background: #020617;
+  color: #fff;
+}
+
+/* CUSTOM ARROW */
+.select-wrapper .arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -269,7 +335,7 @@ td, th {
       </optgroup>
 
     </select>
-   
+    <span class="arrow">⌄</span>
   </div>
 </div>
 
