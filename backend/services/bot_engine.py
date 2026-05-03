@@ -5,14 +5,12 @@ from backend.strategy_engine import generate_signal
 from backend.risk_manager import check_risk
 from backend.martingale import next_stake
 
-# NEW: Deriv API connection (IMPORTANT)
 from backend.services.deriv_api import DerivAPI
 
 deriv = None
 
 
 def start_bot(config):
-
     global deriv
 
     BotState.running = True
@@ -21,11 +19,9 @@ def start_bot(config):
     tp = float(config.get("tp", 20))
     sl = float(config.get("sl", 10))
     loops = int(config.get("loops", 5))
-    martingale = config.get("martingale", "off") == "on"
+    martingale_enabled = config.get("martingale", "off") == "on"
     trade_type = config.get("tradeType")
     market = config.get("market")
-
-    # NEW: Deriv token from frontend
     token = config.get("token")
 
     # =========================
@@ -34,9 +30,15 @@ def start_bot(config):
     deriv = DerivAPI(token)
     deriv.connect()
 
-    BotState.current_stake = base_stake
+    # ⏳ WAIT FOR AUTH (IMPORTANT)
+    while not deriv.authenticated:
+        print("Waiting for Deriv auth...")
+        time.sleep(1)
 
-    # symbol mapping
+    BotState.current_stake = base_stake
+    BotState.last_result = None
+
+    # SYMBOL MAP
     symbol_map = {
         "Volatility 100": "R_100",
         "Boom 500": "BOOM500",
@@ -45,13 +47,21 @@ def start_bot(config):
 
     symbol = symbol_map.get(market, "R_100")
 
-    for i in range(loops):
+    loop_count = 0
 
-        if not BotState.running:
-            break
+    while BotState.running and loop_count < loops:
 
         # =========================
-        # 1. STRATEGY ENGINE
+        # 🚫 WAIT IF TRADE STILL RUNNING
+        # =========================
+        if deriv.current_contract_id is not None:
+            time.sleep(1)
+            continue
+
+        print("Starting new trade...")
+
+        # =========================
+        # 1. STRATEGY
         # =========================
         signal_data = generate_signal(trade_type)
 
@@ -61,51 +71,52 @@ def start_bot(config):
         stake = BotState.current_stake
 
         # =========================
-        # 2. DETERMINE CONTRACT TYPE
+        # 2. CONTRACT TYPE
         # =========================
         contract_type = "CALL" if signal_data["confidence"] < 75 else "PUT"
 
         # =========================
-        # 3. PLACE REAL TRADE (DERIV)
+        # 3. PLACE TRADE
         # =========================
         deriv.buy_contract(symbol, stake, contract_type)
 
         # =========================
-        # 4. WAIT FOR RESULT (REAL MARKET)
-        # NOTE: result updates via websocket in deriv_api.py
+        # 4. WAIT FOR RESULT (REAL)
         # =========================
-        time.sleep(2)
+        prev_trades = BotState.trades
+
+        while BotState.trades == prev_trades:
+            time.sleep(1)
+
+        print("Trade finished:", BotState.last_result)
 
         # =========================
-        # 5. UPDATE STAKE (MARTINGALE SAFE)
+        # 5. MARTINGALE LOGIC
         # =========================
-        if BotState.trades > 0:
-
-            last_trade_win = BotState.profit > 0  # simple indicator
-
-            if last_trade_win:
-                BotState.wins += 1
-                BotState.current_stake = base_stake
-            else:
-                BotState.losses += 1
-                BotState.current_stake = next_stake(
-                    BotState.current_stake,
-                    base_stake,
-                    martingale
-                )
+        if BotState.last_result == "win":
+            BotState.current_stake = base_stake
+        else:
+            BotState.current_stake = next_stake(
+                BotState.current_stake,
+                base_stake,
+                martingale_enabled
+            )
 
         # =========================
-        # 6. RISK CHECK (TP / SL)
+        # 6. RISK MANAGEMENT
         # =========================
         status = check_risk(BotState.profit, tp, sl)
 
         if status in ["TP_HIT", "SL_HIT"]:
+            print("Risk limit reached:", status)
             BotState.running = False
             break
 
-        BotState.trades += 1
+        loop_count += 1
 
-        time.sleep(1.5)
+        time.sleep(1)
+
+    print("Bot stopped")
 
 
 def stop_bot():

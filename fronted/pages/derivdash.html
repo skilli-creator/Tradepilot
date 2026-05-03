@@ -89,13 +89,14 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
   gap: 15px;
+  align-items: end; /* 🔥 aligns inputs nicely */
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
+  width: 100%;   /* ensures uniform sizing */
 }
-
 label {
   font-size: 12px;
   margin-bottom: 5px;
@@ -256,7 +257,7 @@ td, th {
 
     <!-- MANUAL MODE ONLY -->
     <div class="input-group" id="manualStakeGroup">
-      <label>Stake Mode (Manual only)</label>
+      <label>Stake </label>
       <input type="number" id="stake" placeholder="Enter stake">
     </div>
 
@@ -354,6 +355,7 @@ td, th {
 
 let mode = "manual";
 let stakeMode = "auto";
+let botInterval = null;
 
 /* SAFE INITIAL STATE */
 window.onload = function () {
@@ -373,6 +375,30 @@ function setMode(m){
 
   document.getElementById("autoStakeGroup").style.display =
     m==="automatic" ? "block" : "none";
+
+  /* 🔥 Hide fields in manual mode */
+  document.getElementById("tp").parentElement.style.display =
+    m==="automatic" ? "block" : "none";
+
+  document.getElementById("sl").parentElement.style.display =
+    m==="automatic" ? "block" : "none";
+
+  document.getElementById("loops").parentElement.style.display =
+    m==="automatic" ? "block" : "none";
+
+  document.getElementById("martingale").parentElement.style.display =
+    m==="automatic" ? "block" : "none"; // ✅ NEW
+
+  /* Button control */
+  const btn = document.querySelector(".run-btn");
+
+  if(m === "manual"){
+    btn.innerText = "GET ENTRY ANALYSIS";
+    btn.style.background = "#22c55e"; // green
+  } else {
+    btn.innerText = "START BOT";
+    btn.style.background = "#22c55e"; // green
+  }
 }
 
 /* STAKE MODE */
@@ -391,8 +417,29 @@ function exitApp(){
   alert("Logging out...");
 }
 
-/* BOT */
+/* BOT BUTTON */
 function startBot(){
+
+  const btn = document.querySelector(".run-btn");
+
+  /* 🧠 MANUAL MODE */
+  if(mode === "manual"){
+    runIntelligence();
+    return;
+  }
+
+  /* 🤖 STOP BOT */
+  if(botInterval){
+    clearInterval(botInterval);
+    botInterval = null;
+    btn.innerText = "START BOT";
+    btn.style.background = "#22c55e"; // green again
+    return;
+  }
+
+  /* 🤖 START BOT */
+  btn.innerText = "STOP BOT";
+  btn.style.background = "#ef4444"; // 🔴 RED
 
   let profit = 0;
   let wins = 0;
@@ -401,18 +448,12 @@ function startBot(){
 
   let baseStake = Number(stake.value) || 10;
 
-  let interval = setInterval(()=>{
+  botInterval = setInterval(()=>{
 
-    let stakeAmount;
-
-    if(mode === "manual"){
-      stakeAmount = baseStake;
-    } else {
-      stakeAmount =
-        stakeMode === "auto"
-          ? baseStake * 0.02
-          : Number(manualStakeInput.value || 10);
-    }
+    let stakeAmount =
+      stakeMode === "auto"
+        ? baseStake * 0.02
+        : Number(manualStakeInput.value || 10);
 
     let win = Math.random() > 0.5;
     let result = win ? stakeAmount * 0.8 : -stakeAmount;
@@ -424,7 +465,13 @@ function startBot(){
     addRow(stakeAmount, win ? "WIN" : "LOSS", result);
     runIntelligence();
 
-    if(count >= Number(loops.value || 5)) clearInterval(interval);
+    /* STOP CONDITION */
+    if(count >= Number(loops.value || 5)){
+      clearInterval(botInterval);
+      botInterval = null;
+      btn.innerText = "START BOT";
+      btn.style.background = "#22c55e"; // green
+    }
 
   },1200);
 }
@@ -443,6 +490,9 @@ function runIntelligence(){
   if(mode==="automatic"){
     autoPanel.innerText =
       `AUTO MODE → executing trades at ${confidence}% confidence`;
+  } else {
+    autoPanel.innerText =
+      `MANUAL MODE → Suggested entry at ${confidence}% confidence`;
   }
 }
 

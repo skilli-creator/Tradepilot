@@ -1,181 +1,152 @@
 // ===============================
-// TradePilot Bot Engine
-// derivdash.js
+// TradePilot REAL Bot Dashboard
 // ===============================
 
-let mode = "manual";
-let stakeMode = "auto";
 let running = false;
-
-// Stats
-let totalTrades = 0;
-let wins = 0;
-let losses = 0;
-let profit = 0;
+let poller = null;
 
 // ===============================
-// MODE SWITCH
-// ===============================
-function setMode(selected) {
-  mode = selected;
-
-  document.getElementById("manualBox").classList.remove("active");
-  document.getElementById("autoBox").classList.remove("active");
-
-  if (selected === "manual") {
-    document.getElementById("manualBox").classList.add("active");
-    document.getElementById("stakeCard").style.display = "block";
-    document.getElementById("autoStakeSection").style.display = "none";
-  } else {
-    document.getElementById("autoBox").classList.add("active");
-    document.getElementById("stakeCard").style.display = "none";
-    document.getElementById("autoStakeSection").style.display = "block";
-  }
-}
-
-// ===============================
-// STAKE MODE SWITCH
-// ===============================
-function setStakeMode(selected) {
-  stakeMode = selected;
-
-  document.getElementById("autoStakeBox").classList.remove("active");
-  document.getElementById("manualStakeBox").classList.remove("active");
-
-  if (selected === "auto") {
-    document.getElementById("autoStakeBox").classList.add("active");
-    document.getElementById("manualStakeInput").style.display = "none";
-  } else {
-    document.getElementById("manualStakeBox").classList.add("active");
-    document.getElementById("manualStakeInput").style.display = "block";
-  }
-}
-
-// ===============================
-// BOT START
+// START BOT (REAL BACKEND)
 // ===============================
 function startBot() {
   if (running) return;
-  running = true;
 
-  // Reset stats
-  totalTrades = 0;
-  wins = 0;
-  losses = 0;
-  profit = 0;
+  const token = document.getElementById("token").value;
 
-  let baseStake = Number(document.getElementById("stake").value) || 10;
-  let currentStake = baseStake;
+  if (!token) {
+    alert("Please enter your Deriv API Token");
+    return;
+  }
 
-  const takeProfit = Number(document.getElementById("tp").value) || 20;
-  const stopLoss = Number(document.getElementById("sl").value) || 10;
-  const loopCount = Number(document.getElementById("loops").value) || 10;
-  const martingale = document.getElementById("martingale").value;
+  const config = {
+    stake: document.getElementById("stake").value,
+    tp: document.getElementById("tp").value,
+    sl: document.getElementById("sl").value,
+    loops: document.getElementById("loops").value,
+    martingale: document.getElementById("martingale").value,
+    tradeType: document.getElementById("tradeType").value,
+    market: document.getElementById("market").value,
+    token: token
+  };
 
-  const statsBox = document.getElementById("stats");
-  const history = document.getElementById("history");
-
-  let interval = setInterval(() => {
-
-    let stake;
-
-    // ===========================
-    // STAKE LOGIC
-    // ===========================
-    if (mode === "automatic") {
-      if (stakeMode === "auto") {
-        stake = (288.44 * 0.02); // 2% risk
-      } else {
-        stake = Number(document.getElementById("manualStakeValue").value) || 10;
-      }
-    } else {
-      stake = currentStake;
-    }
-
-    // ===========================
-    // SIMULATED TRADE RESULT
-    // ===========================
-    let win = Math.random() > 0.5;
-    let result = win ? stake * 0.8 : -stake;
-
-    profit += result;
-    totalTrades++;
-
-    if (win) {
-      wins++;
-      currentStake = baseStake; // reset martingale
-    } else {
-      losses++;
-
-      // MARTINGALE LOGIC
-      if (martingale === "on") {
-        currentStake *= 2;
-
-        // safety cap (prevents explosion)
-        if (currentStake > baseStake * 8) {
-          currentStake = baseStake;
-        }
-      }
-    }
-
-    // ===========================
-    // UI UPDATE
-    // ===========================
-    updateStats(statsBox);
-    addHistory(history, stake, win, result);
-
-    // ===========================
-    // STOP CONDITIONS
-    // ===========================
-    if (
-      profit >= takeProfit ||
-      profit <= -stopLoss ||
-      totalTrades >= loopCount
-    ) {
-      clearInterval(interval);
-      running = false;
-
-      statsBox.innerHTML += `<p style="color:yellow;">🛑 BOT STOPPED</p>`;
-    }
-
-  }, 1200);
+  fetch("http://localhost:5000/start-bot", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(config)
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      running = true;
+      startPolling();
+    })
+    .catch(err => console.error(err));
 }
 
 // ===============================
-// STATS PANEL
+// STOP BOT
 // ===============================
-function updateStats(box) {
-  let winRate = totalTrades > 0 ? ((wins / totalTrades) * 100).toFixed(1) : 0;
+function stopBot() {
+  fetch("http://localhost:5000/stop-bot", {
+    method: "POST"
+  });
+
+  running = false;
+
+  if (poller) clearInterval(poller);
+}
+
+// ===============================
+// POLL BACKEND STATUS (LIVE)
+// ===============================
+function startPolling() {
+
+  const statsBox = document.getElementById("stats");
+
+  poller = setInterval(() => {
+
+    fetch("http://localhost:5000/bot-status")
+      .then(res => res.json())
+      .then(data => {
+
+        updateStats(statsBox, data);
+        updateLiveInfo(data);
+
+        if (!data.running) {
+          clearInterval(poller);
+          running = false;
+        }
+      })
+      .catch(err => console.error(err));
+
+  }, 1000);
+}
+
+// ===============================
+// UPDATE UI (REAL DATA)
+// ===============================
+function updateStats(box, data) {
 
   box.innerHTML = `
     <h3>🤖 Bot Status</h3>
-    <p>Profit: <b>$${profit.toFixed(2)}</b></p>
-    <p>Trades: ${totalTrades}</p>
-    <p>Wins: ${wins} | Losses: ${losses}</p>
-    <p>Win Rate: ${winRate}%</p>
+
+    <p>Running: <b>${data.running ? "YES" : "NO"}</b></p>
+
+    <p>Profit: <b>$${data.profit}</b></p>
+    <p>Balance: <b>$${data.balance}</b></p>
+
+    <p>Trades: ${data.trades}</p>
+    <p>Wins: ${data.wins} | Losses: ${data.losses}</p>
+    <p>Win Rate: ${data.win_rate}%</p>
+
+    <p>Current Stake: $${data.current_stake}</p>
+
+    <p>Last Result:
+      <span style="color:${data.last_result === 'win' ? '#22c55e' : '#ef4444'}">
+        ${data.last_result || "-"}
+      </span>
+    </p>
+
+    <hr/>
+
+    <p><b>AI Confidence:</b> ${data.confidence}%</p>
+    <p><b>Reason:</b> ${data.reasoning}</p>
   `;
 }
 
 // ===============================
-// HISTORY TABLE
+// LIVE TRADE FEED
 // ===============================
-function addHistory(table, stake, win, result) {
-  table.innerHTML += `
+function updateLiveInfo(data) {
+
+  const history = document.getElementById("history");
+
+  if (!data.last_result) return;
+
+  const color = data.last_result === "win" ? "#22c55e" : "#ef4444";
+
+  history.innerHTML += `
     <tr>
       <td>${new Date().toLocaleTimeString()}</td>
-      <td>$${stake.toFixed(2)}</td>
-      <td style="color:${win ? '#22c55e' : '#ef4444'}">
-        ${win ? "WIN" : "LOSS"}
+      <td>$${data.current_stake}</td>
+      <td style="color:${color}">
+        ${data.last_result.toUpperCase()}
       </td>
-      <td class="${win ? 'win' : 'loss'}">${result.toFixed(2)}</td>
+      <td>${data.profit}</td>
     </tr>
   `;
+
+  // auto-scroll
+  history.scrollTop = history.scrollHeight;
 }
 
 // ===============================
 // LOGOUT
 // ===============================
 function logout() {
-  alert("Logging out...");
+  stopBot();
+  alert("Logged out");
   window.location.reload();
 }

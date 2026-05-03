@@ -4,6 +4,7 @@ from flask_cors import CORS
 from backend.services.deriv_api import DerivAPI
 from backend.bot_state import BotState
 
+
 app = Flask(__name__)
 CORS(app)
 
