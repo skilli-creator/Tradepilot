@@ -294,11 +294,11 @@ select option {
   <div class="logo">🔷 TradePilot</div>
 
   <div class="account-info">
-    <span>$288.44</span>
-    <span>VRTC14409258</span>
-    <span class="demo">DEMO</span>
-    <button class="exit-btn" onclick="exitApp()">Exit</button>
-  </div>
+  <span id="balance">$0.00</span>
+  <span id="accountId">-</span>
+  <span id="accountType" class="demo">-</span>
+  <button class="exit-btn" onclick="exitApp()">Exit</button>
+</div>
 </header>
 
 <main class="dashboard">
@@ -463,11 +463,16 @@ select option {
 
 </main>
 
-<<script>
+<script>
 
 let mode = "manual";
 let stakeMode = "auto";
 let botInterval = null;
+const manualBox = document.getElementById("manualBox");
+const autoBox = document.getElementById("autoBox");
+
+const autoStakeBox = document.getElementById("autoStakeBox");
+const manualStakeBox = document.getElementById("manualStakeBox");
 
 /* 🔥 MANUAL ANALYSIS STATE */
 let manualAnalysisActive = false;
@@ -477,8 +482,11 @@ let manualAnalysisInterval = null;
    INIT
 ========================= */
 window.onload = function () {
+
   setMode("manual");
   setStakeMode("auto");
+
+  initDashboard();
 };
 
 /* =========================
@@ -647,14 +655,14 @@ function startBot(){
 
   let profit = 0;
   let count = 0;
-  let baseStake = Number(stake.value) || 10;
+  let baseStake = Number(document.getElementById("stake")?.value) || 10;
 
   botInterval = setInterval(()=>{
 
     let stakeAmount =
       stakeMode === "auto"
         ? baseStake * 0.02
-        : Number(manualStakeInput.value || 10);
+        : Number(document.getElementById("manualStakeInput")?.value || 10)
 
     let win = Math.random() > 0.5;
     let result = win ? stakeAmount * 0.8 : -stakeAmount;
@@ -666,7 +674,7 @@ function startBot(){
     addRow(stakeAmount, win ? "WIN" : "LOSS", result);
     runIntelligence();
 
-    if(count >= Number(loops.value || 5)){
+    if(count >= Number(document.getElementById("loops")?.value || 5)){
       clearInterval(botInterval);
       botInterval = null;
 
@@ -685,7 +693,7 @@ function runIntelligence(){
   let confidence = Math.floor(Math.random()*25+70);
 
   circle.style.setProperty("--p",confidence+"%");
-  circle.innerText = confidence+"%";
+  document.getElementById("circle").innerText = confidence + "%";
 
   signal.innerText = "Signal updating...";
   reasonBox.innerText = "Market structure + momentum analysis active.";
@@ -726,7 +734,31 @@ function addRow(stake,status,res){
    EXIT
 ========================= */
 function exitApp(){
-  alert("Logging out...");
+  // clear saved user session
+  localStorage.removeItem("user");
+  localStorage.removeItem("deriv_token");
+
+  // redirect to home page
+  window.location.href = "marketsdash.html";
+}
+
+
+function initDashboard(){
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if(!user){
+    console.log("No user session");
+    return;
+  }
+
+  document.getElementById("balance").innerText = `$${user.balance}`;
+  document.getElementById("accountId").innerText = user.account_id;
+  document.getElementById("accountType").innerText = user.account_type;
+
+  if(user.account_type === "Demo"){
+    document.getElementById("accountType").classList.add("demo");
+  }
 }
 
 </script>

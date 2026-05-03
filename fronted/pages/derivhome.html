@@ -128,6 +128,31 @@ input{
     color:#38bdf8;
     font-weight:bold;
 }
+.password-wrapper {
+    position: relative;
+    width: 340px;
+    margin: auto;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.toggle-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 16px;
+    user-select: none;
+}
+
+.toggle-eye:hover {
+    color: #38bdf8;
+}
 
 </style>
 
@@ -174,13 +199,20 @@ Tradepilot AI — guiding your moves with precision and executing multiple contr
 <!-- TOKEN -->
 <div class="token-box">
 
-    <input type="text" id="apiToken" placeholder="Paste your Deriv API Token">
+    <div class="password-wrapper">
+  <input type="password" id="apiToken" placeholder="Paste your Deriv API Token">
+
+  <span class="toggle-eye" onclick="toggleToken()">
+    👁️
+  </span>
+</div>
 
     <br>
 
-    <button class="button secondary-btn" onclick="connectToken()">
-        🔐 Connect with API Token
-    </button>
+    <button class="button secondary-btn" id="connectBtn" onclick="connectToken()">
+    🔐 Connect with API Token
+</button>
+
     <br>
     <br>
 
@@ -250,12 +282,18 @@ function connectOAuth(){
 /* TOKEN FLOW */
 function connectToken(){
 
+
+    const btn = document.getElementById("connectBtn");
     const token = document.getElementById("apiToken").value;
 
     if(!token){
         alert("Please paste your Deriv API token");
         return;
     }
+
+    // 🔥 SHOW LOADING STATE
+    btn.innerText = "Connecting...";
+    btn.disabled = true;
 
     fetch("http://127.0.0.1:5000/api/connect", {
         method: "POST",
@@ -269,23 +307,45 @@ function connectToken(){
 
         console.log(data);
 
-        if(data.status === "success"){
+        if(data.status !== "success"){
+            alert(data.message);
 
-    console.log("USER DATA:", data.user);
+            // 🔥 RESET BUTTON
+            btn.innerText = "🔐 Connect with API Token";
+            btn.disabled = false;
+            return;
+        }
 
-    alert(
-        "Account ID: " + data.user.account_id + "\n" +
-        "Balance: " + data.user.balance + "\n" +
-        "Currency: " + data.user.currency + "\n" +
-        "Type: " + data.user.account_type
-    );
+        // store session
+        localStorage.setItem("deriv_token", token);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-    // Delay redirect so you SEE it
-    setTimeout(() => {
+        // redirect
         window.location.href = "derivdash.html";
-    }, 3000);
+    })
+    .catch(err => {
 
+        console.log(err);
+
+        alert("Connection failed");
+
+        // 🔥 RESET BUTTON
+        btn.innerText = "🔐 Connect with API Token";
+        btn.disabled = false;
+
+    });
 }
+function toggleToken(){
+
+    const input = document.getElementById("apiToken");
+
+    if(input.type === "password"){
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+
 </script>
 
 </body>
