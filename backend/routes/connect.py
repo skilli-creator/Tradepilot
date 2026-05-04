@@ -1,15 +1,20 @@
 from flask import Blueprint, request, jsonify
 import websocket
 import json
+from backend.database.db import get_db_connection
 
 connect_bp = Blueprint("connect", __name__)
 
 
+# =========================
+# 🔌 VERIFY DERIV TOKEN
+# =========================
 def verify_deriv_token(token):
     try:
-        ws = websocket.create_connection("wss://ws.derivws.com/websockets/v3?app_id=1089")
+        ws = websocket.create_connection(
+            "wss://ws.derivws.com/websockets/v3?app_id=1089"
+        )
 
-        # Send authorize request
         ws.send(json.dumps({
             "authorize": token
         }))
@@ -26,6 +31,9 @@ def verify_deriv_token(token):
         return False, str(e)
 
 
+# =========================
+# 🚀 CONNECT ACCOUNT
+# =========================
 @connect_bp.route("/api/connect", methods=["POST"])
 def connect_account():
     data = request.get_json()
@@ -49,15 +57,54 @@ def connect_account():
     auth = result.get("authorize", {})
     print("DERIV RESPONSE:", result)
 
+    # =========================
+    # 💰 FIX BALANCE
+    # =========================
+    balance_raw = float(auth.get("balance", 0))
+    balance = balance_raw / 100 if balance_raw > 1000 else balance_raw
+
+    # =========================
+    # 📦 EXTRACT USER DATA
+    # =========================
+    account_id = auth.get("loginid")
+    email = auth.get("email")
+    currency = auth.get("currency")
+    account_type = "Demo" if auth.get("is_virtual") == 1 else "Real"
+
+    # =========================
+    # 🔐 SAVE TO DATABASE
+    # =========================
+    try:
+        conn = get_db_connection()
+
+        if conn:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                INSERT INTO derivdash (account_id, email, token, balance, currency, account_type)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (account_id, email, token, balance, currency, account_type))
+            conn.commit()
+            print("User saved successfully!")  # 👈 DEBUG
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+    except Exception as db_error:
+        print("DB ERROR:", db_error)
+
+    # =========================
+    # ✅ RESPONSE TO FRONTEND
+    # =========================
     return jsonify({
-    "status": "success",
-    "message": "Connected successfully",
-    "user": {
-        "account_id": auth.get("loginid"),
-        "balance": auth.get("balance"),
-        "currency": auth.get("currency"),
-        "email": auth.get("email"),
-        "account_type": "Demo" if auth.get("is_virtual") == 1 else "Real"
-        
-    }
-})
+        "status": "success",
+        "message": "Connected successfully",
+        "token": token,
+        "user": {
+            "account_id": account_id,
+            "balance": round(balance, 2),
+            "currency": currency,
+            "email": email,
+            "account_type": account_type
+        }
+    })

@@ -8,7 +8,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(app)  # 🔥 allow frontend access
+    CORS(app, supports_credentials=True)  # 🔥 allow frontend access
 
     app.register_blueprint(connect_bp)
 

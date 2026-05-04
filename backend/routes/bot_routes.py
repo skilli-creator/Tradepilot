@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from threading import Thread
-from services.bot_engine import run_bot
+from services.bot_engine import run_real_bot
 import bot_state
 
 bot_bp = Blueprint("bot_bp", __name__)
@@ -22,7 +22,7 @@ def start_bot():
         print("TRADE:", data)
 
     def run():
-        run_bot(config, callback)
+        run_real_bot(config, callback)
         bot_state.bot_running = False
 
     bot_state.bot_thread = Thread(target=run)
