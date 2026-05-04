@@ -91,12 +91,8 @@ body {
   gap: 15px;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
-  width: 100%;          /* 🔥 IMPORTANT */
-  min-width: 0;         /* 🔥 prevents squeezing */
-}
+
+
 .input-group label {
   display: block;
 }
@@ -106,13 +102,6 @@ label {
   color: #94a3b8;
 }
 
-input, select {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  background: #020617;
-  color: white;
-}
 
 /* BUTTON */
 .run-btn {
@@ -268,10 +257,7 @@ select option {
   font-size: 14px;
 }
 /* 🔴 ERROR STATE */
-.error {
-  border: 1px solid #ef4444 !important;
-  box-shadow: 0 0 8px rgba(239,68,68,0.6);
-}
+
 
 /* 📳 SHAKE ANIMATION */
 @keyframes shake {
@@ -285,12 +271,6 @@ select option {
 .shake {
   animation: shake 0.3s ease;
 }
-.trade-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
 
 input, select {
   padding: 12px;
@@ -305,11 +285,6 @@ input, select {
 input:focus, select:focus {
   border-color: #22c55e;
   box-shadow: 0 0 0 1px #22c55e;
-}
-.trade-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
 }
 
 .trade-btn {
@@ -373,6 +348,9 @@ input[type=number]::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+input[type=number] {
+  -webkit-appearance: none;
 }
 </style>
 </head>
@@ -654,10 +632,10 @@ function validateInputs(){
   mark("tradeType");
 
   // manual mode
-  if(mode === "manual"){
-    
-  }
-
+ if(mode === "manual"){
+  mark("market");
+  mark("tradeType");
+}
   // automatic mode
   if(mode === "automatic"){
     if(stakeMode === "manual"){
@@ -763,7 +741,7 @@ fetch("http://127.0.0.1:5000/start", {
   body: JSON.stringify({
     market: document.getElementById("market").value,
     tradeType: document.getElementById("tradeType").value,
-    stake: document.getElementById("stake").value,
+    stake: document.getElementById("manualStakeInput").value,
     loops: document.getElementById("loops").value,
     tp: document.getElementById("tp").value,
     sl: document.getElementById("sl").value,
@@ -893,6 +871,7 @@ function initDashboard(){
   }
 }
 function renderManualTradeUI(){
+  
 
   const tradeType = document.getElementById("tradeType").value;
   const panel = document.getElementById("manualTradePanel");
@@ -1034,7 +1013,7 @@ function renderManualTradeUI(){
   <div class="select-wrapper">
     <select id="digit">
 
-      <option value="">Select digit</option>
+      <option value="" selected disabled>Select barrier digit</option>
 
       <option value="0">0</option>
       <option value="1">1</option>
