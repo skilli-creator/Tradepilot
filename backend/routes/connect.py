@@ -80,13 +80,32 @@ def connect_account():
         if conn:
             cursor = conn.cursor()
 
-            cursor.execute("""
-                INSERT INTO derivdash (account_id, email, token, balance, currency, account_type)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (account_id, email, token, balance, currency, account_type))
+            print("Checking if user exists...")
+
+            # Check if user exists
+            cursor.execute("SELECT * FROM derivdash WHERE account_id = %s", (account_id,))
+            existing_user = cursor.fetchone()
+
+            if existing_user:
+                print("User exists — updating...")
+
+                cursor.execute("""
+                    UPDATE derivdash
+                    SET email=%s, token=%s, balance=%s, currency=%s, account_type=%s
+                    WHERE account_id=%s
+                """, (email, token, balance, currency, account_type, account_id))
+
+            else:
+                print("New user — inserting...")
+
+                cursor.execute("""
+                    INSERT INTO derivdash (account_id, email, token, balance, currency, account_type)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (account_id, email, token, balance, currency, account_type))
+
             conn.commit()
-            print("User saved successfully!")  # 👈 DEBUG
-            conn.commit()
+            print("DB operation successful!")
+
             cursor.close()
             conn.close()
 
