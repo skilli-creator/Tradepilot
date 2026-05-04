@@ -1,42 +1,59 @@
 import time
+import random
 
 def run_real_bot(config, deriv_client):
 
-    loops = int(config["loops"])
-    stake = float(config["stake"])
-    market = config["market"]
+    loops = int(config.get("loops", 5))
+    stake = float(config.get("stake", 1))
+    market = config.get("market", "R_100")
 
     results = []
+
+    # Ensure websocket is active (important)
+    try:
+        deriv_client.connect()
+    except:
+        pass
 
     for i in range(loops):
 
         # =========================
-        # STEP 1: REAL SIGNAL (placeholder logic)
+        # STEP 1: EVEN / ODD SIGNAL
         # =========================
-        signal = "CALL"  # later we replace with AI/strategy engine
+        pick = random.randint(0, 1)
+
+        signal_type = "EVEN" if pick == 0 else "ODD"
+
+        contract_type = "DIGITEVEN" if signal_type == "EVEN" else "DIGITODD"
 
         # =========================
-        # STEP 2: REQUEST PROPOSAL (REAL DERIV STEP)
+        # STEP 2: PROPOSAL REQUEST
         # =========================
         proposal = deriv_client.send({
             "proposal": 1,
             "amount": stake,
             "basis": "stake",
-            "contract_type": signal,
+            "contract_type": contract_type,
             "currency": "USD",
-            "duration": 5,
+            "duration": 1,
             "duration_unit": "t",
             "symbol": market
         })
 
-        if "error" in proposal:
-            results.append({"error": proposal["error"]["message"]})
+        if not proposal or "error" in proposal:
+            results.append({
+                "error": proposal.get("error", {}).get("message", "Proposal failed")
+            })
             continue
 
-        proposal_data = proposal["proposal"]
+        proposal_data = proposal.get("proposal", {})
 
-        proposal_id = proposal_data["id"]
-        ask_price = proposal_data["ask_price"]
+        proposal_id = proposal_data.get("id")
+        ask_price = proposal_data.get("ask_price")
+
+        if not proposal_id or not ask_price:
+            results.append({"error": "Invalid proposal data"})
+            continue
 
         # =========================
         # STEP 3: BUY CONTRACT
@@ -46,11 +63,17 @@ def run_real_bot(config, deriv_client):
             "price": ask_price
         })
 
-        if "error" in buy_response:
-            results.append({"error": buy_response["error"]["message"]})
+        if not buy_response or "error" in buy_response:
+            results.append({
+                "error": buy_response.get("error", {}).get("message", "Buy failed")
+            })
             continue
 
-        contract_id = buy_response["buy"]["contract_id"]
+        contract_id = buy_response.get("buy", {}).get("contract_id")
+
+        if not contract_id:
+            results.append({"error": "No contract ID returned"})
+            continue
 
         # =========================
         # STEP 4: MONITOR CONTRACT
@@ -62,21 +85,23 @@ def run_real_bot(config, deriv_client):
 
         result = deriv_client.receive()
 
-        contract = result["proposal_open_contract"]
+        contract = result.get("proposal_open_contract", {})
 
         profit = float(contract.get("profit", 0))
-
         status = "WIN" if profit > 0 else "LOSS"
 
+        # =========================
+        # STEP 5: STORE RESULT
+        # =========================
         results.append({
             "market": market,
-            "signal": signal,
+            "signal": signal_type,
+            "contract_type": contract_type,
             "stake": stake,
             "profit": profit,
             "status": status
         })
 
-        # optional delay (avoid rate limits)
         time.sleep(1)
 
     return results
