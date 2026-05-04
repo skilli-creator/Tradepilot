@@ -1,19 +1,29 @@
 from flask import Blueprint, request, jsonify
 from threading import Thread
-from services.bot_engine import run_real_bot
-import bot_state
+from backend.services.bot_engine import run_real_bot
+import backend.bot_state as bot_state
 
 bot_bp = Blueprint("bot_bp", __name__)
 
 latest_results = []
+
+
+# =========================
+# START BOT
+# =========================
 @bot_bp.route("/start", methods=["POST"])
 def start_bot():
+
     global latest_results
 
     if bot_state.bot_running:
         return jsonify({"message": "Bot already running"}), 400
 
-    config = request.json
+    config = request.get_json()
+
+    if not config:
+        return jsonify({"message": "Invalid config"}), 400
+
     latest_results = []
     bot_state.bot_running = True
 
@@ -22,17 +32,34 @@ def start_bot():
         print("TRADE:", data)
 
     def run():
-        run_real_bot(config, callback)
-        bot_state.bot_running = False
+        try:
+            run_real_bot(config, callback)
+        finally:
+            bot_state.bot_running = False
 
     bot_state.bot_thread = Thread(target=run)
     bot_state.bot_thread.start()
 
-    return jsonify({"message": "Bot started"})
+    return jsonify({
+        "status": "success",
+        "message": "Bot started"
+    })
+
+
+# =========================
+# STOP BOT
+# =========================
 @bot_bp.route("/stop", methods=["POST"])
 def stop_bot():
     bot_state.bot_running = False
     return jsonify({"message": "Bot stopped"})
+
+
+# =========================
+# GET RESULTS
+# =========================
 @bot_bp.route("/results", methods=["GET"])
 def results():
-    return jsonify({"data": latest_results})
+    return jsonify({
+        "data": latest_results
+    })

@@ -282,7 +282,6 @@ function connectOAuth(){
 /* TOKEN FLOW */
 function connectToken(){
 
-
     const btn = document.getElementById("connectBtn");
     const token = document.getElementById("apiToken").value;
 
@@ -291,59 +290,50 @@ function connectToken(){
         return;
     }
 
-    // 🔥 SHOW LOADING STATE
+    // 🔥 LOADING STATE
     btn.innerText = "Connecting...";
     btn.disabled = true;
 
-    fetch("http://192.168.1.106:5000/api/connect", {
+    fetch("http://127.0.0.1:5000/api/connect", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({
+            token: token   // ✅ CORRECT
+        })
     })
     .then(res => res.json())
     .then(data => {
 
-        console.log(data);
+        console.log("RESPONSE:", data);
 
         if(data.status !== "success"){
             alert(data.message);
 
-            // 🔥 RESET BUTTON
             btn.innerText = "🔐 Connect with API Token";
             btn.disabled = false;
             return;
         }
 
-        // store session
+        // ✅ SAVE TOKEN
         localStorage.setItem("deriv_token", token);
+
+        // ✅ SAVE USER
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // redirect
+        // ✅ GO TO DASHBOARD
         window.location.href = "derivdash.html";
     })
     .catch(err => {
 
-        console.log(err);
+        console.log("ERROR:", err);
 
         alert("Connection failed");
 
-        // 🔥 RESET BUTTON
         btn.innerText = "🔐 Connect with API Token";
         btn.disabled = false;
-
     });
-}
-function toggleToken(){
-
-    const input = document.getElementById("apiToken");
-
-    if(input.type === "password"){
-        input.type = "text";
-    } else {
-        input.type = "password";
-    }
 }
 
 </script>

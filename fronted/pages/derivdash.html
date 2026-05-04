@@ -198,6 +198,7 @@ td, th {
   margin-top: 10px;
   color: #94a3b8;
 }
+
 /* INPUT GROUP */
 .input-group {
   display: flex;
@@ -284,6 +285,85 @@ select option {
 .shake {
   animation: shake 0.3s ease;
 }
+.trade-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+
+input, select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #334155; /* 🔥 visible border */
+  background: #020617;
+  color: white;
+  font-size: 14px;
+}
+
+/* FOCUS EFFECT */
+input:focus, select:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px #22c55e;
+}
+.trade-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.trade-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* GREEN */
+.btn-green {
+  background: #22c55e;
+}
+.btn-green:hover {
+  background: #16a34a;
+  transform: scale(1.03);
+}
+
+/* RED */
+.btn-red {
+  background: #ef4444;
+}
+.btn-red:hover {
+  background: #dc2626;
+  transform: scale(1.03);
+}
+.trade-btn:active {
+  transform: scale(0.97);
+}
+#manualTradePanel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+.trade-buttons {
+  grid-column: 1 / -1; /* full width row */
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.error {
+  border: 1px solid #ef4444 !important;
+  box-shadow: 0 0 8px rgba(239,68,68,0.8);
+  animation: blink 0.4s alternate 2;
+}
+
+@keyframes blink {
+  from { box-shadow: 0 0 5px rgba(239,68,68,0.4); }
+  to   { box-shadow: 0 0 12px rgba(239,68,68,1); }
+}
 </style>
 </head>
 
@@ -367,12 +447,7 @@ select option {
       </select>
     </div>
 
-    <!-- MANUAL MODE ONLY -->
-   <div class="input-group" id="manualStakeGroup">
-  <label>Stake</label>
-  <input type="number" id="stake" placeholder="Enter stake">
-</div>
-
+<div class="input-group hidden" id="manualStakeGroup"></div>
     <!-- AUTOMATIC MODE ONLY -->
     <div class="input-group" id="autoStakeGroup">
       <label>Stake Mode</label>
@@ -437,7 +512,9 @@ select option {
   </div>
 
   <div class="auto-panel" id="autoPanel"></div>
+  <div id="manualTradePanel" class="auto-panel hidden"></div>
 </div>
+
 
 <!-- STATS -->
 <div class="card" id="stats"></div>
@@ -485,8 +562,8 @@ window.onload = function () {
 
   setMode("manual");
   setStakeMode("auto");
-
   initDashboard();
+  pollBot();
 };
 
 /* =========================
@@ -567,7 +644,7 @@ function validateInputs(){
 
   // manual mode
   if(mode === "manual"){
-    mark("stake");
+    
   }
 
   // automatic mode
@@ -589,6 +666,7 @@ function validateInputs(){
 function startBot(){
 
   const btn = document.querySelector(".run-btn");
+ 
 
   /* ❌ BLOCK IF INVALID */
   if(!validateInputs()){
@@ -625,6 +703,7 @@ function startBot(){
     }
 
     manualAnalysisActive = true;
+     renderManualTradeUI();
 
     btn.innerText = "STOP ENTRY ANALYSIS";
     btn.style.background = "#ef4444";
@@ -641,48 +720,62 @@ function startBot(){
   /* =========================
      🤖 AUTOMATIC BOT
   ========================= */
-  if(botInterval){
-    clearInterval(botInterval);
-    botInterval = null;
 
-    btn.innerText = "START BOT";
-    btn.style.background = "#22c55e";
-    return;
-  }
 
   btn.innerText = "STOP BOT";
   btn.style.background = "#ef4444";
 
-  let profit = 0;
-  let count = 0;
-  let baseStake = Number(document.getElementById("stake")?.value) || 10;
+  /* =========================
+   🤖 AUTOMATIC BOT (SAFE VERSION)
+========================= */
 
-  botInterval = setInterval(()=>{
+if(botInterval){
+  clearInterval(botInterval);
+  botInterval = null;
 
-    let stakeAmount =
-      stakeMode === "auto"
-        ? baseStake * 0.02
-        : Number(document.getElementById("manualStakeInput")?.value || 10)
+  btn.innerText = "START BOT";
+  btn.style.background = "#22c55e";
+  return;
+}
 
-    let win = Math.random() > 0.5;
-    let result = win ? stakeAmount * 0.8 : -stakeAmount;
+/* ONLY UI STATE CHANGE */
+btn.innerText = "CONNECTING...";
+btn.style.background = "#f59e0b";
+console.log("TOKEN:", localStorage.getItem("deriv_token"));
 
-    profit += result;
-    count++;
+/* CALL BACKEND (NON-BLOCKING) */
+fetch("http://127.0.0.1:5000/start", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    market: document.getElementById("market").value,
+    tradeType: document.getElementById("tradeType").value,
+    stake: document.getElementById("stake").value,
+    loops: document.getElementById("loops").value,
+    tp: document.getElementById("tp").value,
+    sl: document.getElementById("sl").value,
+    martingale: document.getElementById("martingale").value
+  })
+})
+.then(res => res.json())
+.then(data => {
 
-    updateStats(profit,0,0,count);
-    addRow(stakeAmount, win ? "WIN" : "LOSS", result);
-    runIntelligence();
+  console.log("BOT STARTED:", data);
 
-    if(count >= Number(document.getElementById("loops")?.value || 5)){
-      clearInterval(botInterval);
-      botInterval = null;
+  /* DO NOT TOUCH OTHER UI FEATURES */
+  btn.innerText = "BOT RUNNING...";
+  btn.style.background = "#ef4444";
 
-      btn.innerText = "START BOT";
-      btn.style.background = "#22c55e";
-    }
+})
+.catch(err => {
 
-  },1200);
+  console.log(err);
+
+  btn.innerText = "START BOT";
+  btn.style.background = "#22c55e";
+});
 }
 
 /* =========================
@@ -730,6 +823,34 @@ function addRow(stake,status,res){
   `;
 }
 
+function pollBot(){
+
+  setInterval(async () => {
+
+    const res = await fetch("http://127.0.0.1:5000/status");
+    const data = await res.json();
+
+    // ✅ Update stats (profit + number of trades)
+    updateStats(data.profit, 0, 0, data.trades);
+
+    // ✅ Clear table first
+    const table = document.getElementById("history");
+    table.innerHTML = "";
+
+    // ✅ Add each trade
+    data.history.forEach(trade => {
+
+      addRow(
+        trade.stake,
+        trade.result > 0 ? "WIN" : "LOSS",
+        trade.result
+      );
+
+    });
+
+  }, 1000); // every 1 second
+
+}
 /* =========================
    EXIT
 ========================= */
@@ -760,7 +881,271 @@ function initDashboard(){
     document.getElementById("accountType").classList.add("demo");
   }
 }
+function renderManualTradeUI(){
 
+  const tradeType = document.getElementById("tradeType").value;
+  const panel = document.getElementById("manualTradePanel");
+
+  let html = "";
+
+  /* =========================
+     RISE / FALL
+  ========================= */
+  if(tradeType === "Rise/Fall"){
+    html = `
+      <h4>Execute Trade</h4>
+
+      <div class="input-group">
+        <label>Stake</label>
+        <input type="number" id="m_stake" placeholder="Enter stake">
+      </div>
+
+        <div class="input-group">
+        <label>Duration</label>
+        <div class="input-group">
+  <div class="select-wrapper">
+    <select id="duration">
+
+      <optgroup label="Ticks">
+        <option value="1t">1 Tick</option>
+        <option value="2t">2 Ticks</option>
+        <option value="3t">3 Ticks</option>
+        <option value="4t">4 Ticks</option>
+        <option value="5t">5 Ticks</option>
+        <option value="10t">10 Ticks</option>
+      </optgroup>
+
+      <optgroup label="Minutes">
+        <option value="1m">1 Minute</option>
+        <option value="2m">2 Minutes</option>
+        <option value="3m">3 Minutes</option>
+        <option value="5m">5 Minutes</option>
+        <option value="10m">10 Minutes</option>
+      </optgroup>
+
+    </select>
+
+    <span class="arrow">⌄</span>
+  </div>
+</div>
+      </div>
+
+      <div class="trade-buttons">
+        <button class="trade-btn btn-green" onclick="placeManualTrade('rise')">RISE</button>
+        <button class="trade-btn btn-red" onclick="placeManualTrade('fall')">FALL</button>
+      </div>
+    `;
+  }
+
+  /* =========================
+     EVEN / ODD
+  ========================= */
+  else if(tradeType === "Even/Odd"){
+    html = `
+      <h4>Execute Trade</h4>
+
+      <div class="input-group">
+        <label>Stake</label>
+        <input type="number" id="m_stake" placeholder="Enter stake">
+      </div>
+
+      <div class="input-group">
+        <div class="input-group">
+  <label>Duration</label>
+
+  <div class="select-wrapper">
+    <select id="duration">
+
+      <optgroup label="Ticks">
+        <option value="1t">1 Tick</option>
+        <option value="2t">2 Ticks</option>
+        <option value="3t">3 Ticks</option>
+        <option value="4t">4 Ticks</option>
+        <option value="5t">5 Ticks</option>
+        <option value="10t">10 Ticks</option>
+      </optgroup>
+
+    </select>
+
+    <span class="arrow">⌄</span>
+  </div>
+</div>
+      </div>
+
+      <div class="trade-buttons">
+        <button class="trade-btn btn-green" onclick="placeManualTrade('even')">EVEN</button>
+        <button class="trade-btn btn-red" onclick="placeManualTrade('odd')">ODD</button>
+      </div>
+    `;
+  }
+
+  /* =========================
+     OVER / UNDER
+  ========================= */
+  else if(tradeType === "Over/Under"){
+    html = `
+      <h4>Execute Trade</h4>
+
+      <div class="input-group">
+        <label>Stake</label>
+        <input type="number" id="m_stake" placeholder="Enter stake">
+      </div>
+
+      <div class="input-group">
+        <div class="input-group">
+  <label>Duration</label>
+
+  <div class="select-wrapper">
+    <select id="duration">
+
+      <optgroup label="Ticks">
+        <option value="1t">1 Tick</option>
+        <option value="2t">2 Ticks</option>
+        <option value="3t">3 Ticks</option>
+        <option value="4t">4 Ticks</option>
+        <option value="5t">5 Ticks</option>
+        <option value="10t">10 Ticks</option>
+      </optgroup>
+
+    </select>
+
+    <span class="arrow">⌄</span>
+  </div>
+</div>
+      </div>
+
+      <div class="input-group">
+        <label>Barrier Digit (0–9)</label>
+        <input type="number" id="digit" min="0" max="9" placeholder="Enter digit">
+      </div>
+
+      <div class="trade-buttons">
+        <button class="trade-btn btn-green" onclick="placeManualTrade('over')">OVER</button>
+        <button class="trade-btn btn-red" onclick="placeManualTrade('under')">UNDER</button>
+      </div>
+    `;
+  }
+
+  /* =========================
+     HIGHER / LOWER
+  ========================= */
+  else if(tradeType === "Higher/Lower"){
+    html = `
+      <h4>Execute Trade</h4>
+
+      <div class="input-group">
+        <label>Stake</label>
+        <input type="number" id="m_stake" placeholder="Enter stake">
+      </div>
+
+  
+      <div class="input-group">
+        <label>Duration</label>
+        <div class="input-group">
+    <div class="select-wrapper">
+    <select id="duration">
+
+      <optgroup label="Ticks">
+        <option value="1t">1 Tick</option>
+        <option value="2t">2 Ticks</option>
+        <option value="3t">3 Ticks</option>
+        <option value="4t">4 Ticks</option>
+        <option value="5t">5 Ticks</option>
+        <option value="10t">10 Ticks</option>
+      </optgroup>
+
+      <optgroup label="Minutes">
+        <option value="1m">1 Minute</option>
+        <option value="2m">2 Minutes</option>
+        <option value="3m">3 Minutes</option>
+        <option value="5m">5 Minutes</option>
+        <option value="10m">10 Minutes</option>
+      </optgroup>
+
+    </select>
+
+    <span class="arrow">⌄</span>
+  </div>
+</div>
+      </div>
+
+      <div class="input-group">
+        <label>Barrier</label>
+        <input type="number" id="barrier" placeholder="Enter barrier">
+      </div>
+
+      <div class="trade-buttons">
+        <button class="trade-btn btn-green" onclick="placeManualTrade('higher')">HIGHER</button>
+        <button class="trade-btn btn-red" onclick="placeManualTrade('lower')">LOWER</button>
+      </div>
+    `;
+  }
+
+  panel.innerHTML = html;
+  panel.classList.remove("hidden");
+}
+  
+function placeManualTrade(direction){
+
+  if(!validateManualTrade()){
+    console.log("❌ Invalid inputs");
+    return;
+  }
+
+  const stake = document.getElementById("m_stake").value;
+  const duration = document.getElementById("duration").value;
+  const market = document.getElementById("market").value;
+  const tradeType = document.getElementById("tradeType").value;
+
+  console.log("✅ Manual Trade:", {
+    direction,
+    stake,
+    duration,
+    market,
+    tradeType
+  });
+
+
+  // 🔥 Send to backend (later)
+}
+function validateManualTrade(){
+
+  let valid = true;
+
+  function mark(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+
+    if(!el.value || el.value.trim() === ""){
+      el.classList.add("error", "shake");
+
+      setTimeout(()=>{
+        el.classList.remove("shake");
+      }, 300);
+
+      valid = false;
+    } else {
+      el.classList.remove("error");
+    }
+  }
+
+  const tradeType = document.getElementById("tradeType").value;
+
+  // COMMON
+  mark("m_stake");
+  mark("duration");
+
+  // CONDITIONAL
+  if(tradeType === "Over/Under"){
+    mark("digit");
+  }
+
+  if(tradeType === "Higher/Lower"){
+    mark("barrier");
+  }
+
+  return valid;
+}
 </script>
 
 </body>
