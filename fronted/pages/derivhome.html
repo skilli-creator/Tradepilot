@@ -295,7 +295,7 @@ function connectToken(){
     btn.innerText = "Connecting...";
     btn.disabled = true;
 
-    fetch("http://127.0.0.1:5000/api/connect", {
+    fetch("http://192.168.1.106:5000/api/connect", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
