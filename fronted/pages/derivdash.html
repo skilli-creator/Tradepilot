@@ -481,6 +481,15 @@ input[type=number] {
         <option value="Over/Under">Over/Under</option>
       </select>
     </div>
+<div class="input-group">
+  <label>Strategy</label>
+
+  <select id="strategy" onclick="handleStrategyClick()">
+    <option value="" selected disabled>Select Strategy</option>
+  </select>
+
+  <small id="strategyHint" style="color:#94a3b8;"></small>
+</div>
 
 <div class="input-group hidden" id="manualStakeGroup"></div>
     <!-- AUTOMATIC MODE ONLY -->
@@ -578,6 +587,40 @@ input[type=number] {
 
 <script>
 
+  const strategies = {
+  "Rise/Fall": [
+    "Trend Momentum Entry",
+    "Support/Resistance Bounce",
+    "Breakout Confirmation",
+    "Market Flow Continuation",
+    "Volatility Spike Entry"
+  ],
+
+  "Higher/Lower": [
+    "Price Deviation Strategy",
+    "Mean Reversion Entry",
+    "Trend Projection Model",
+    "Liquidity Sweep Detection",
+    "Candle Strength Analysis"
+  ],
+
+  "Even/Odd": [
+    "Digit Flow Analysis",
+    "Statistical Distribution Bias",
+    "Tick Pattern Prediction",
+    "Randomness Exploit Model",
+    "Momentum Digit Shift"
+  ],
+
+  "Over/Under": [
+    "Barrier Pressure Strategy",
+    "Volatility Expansion Model",
+    "Support Break Prediction",
+    "Price Clustering Analysis",
+    "Mean Threshold Reversal"
+  ]
+};
+
 let mode = "manual";
 let stakeMode = "auto";
 let botInterval = null;
@@ -606,6 +649,52 @@ window.onload = function () {
    MODE SWITCH
 ========================= */
 function setMode(m){
+  document.getElementById("tradeType").addEventListener("change", function () {
+  updateStrategies();
+
+  // RESET strategy when trade type changes
+  const strategy = document.getElementById("strategy");
+  strategy.value = "";
+});
+function updateStrategies(){
+
+  const tradeType = document.getElementById("tradeType").value;
+  const strategy = document.getElementById("strategy");
+
+  strategy.innerHTML = `<option value="" disabled selected>Select Strategy</option>`;
+
+  if(!strategies[tradeType]) return;
+
+  strategies[tradeType].forEach(s => {
+    let opt = document.createElement("option");
+    opt.value = s;
+    opt.textContent = s;
+    strategy.appendChild(opt);
+  });
+}
+function handleStrategyClick(){
+
+  const tradeType = document.getElementById("tradeType").value;
+  const strategy = document.getElementById("strategy");
+
+  if(!tradeType){
+
+    strategy.classList.add("error", "shake");
+
+    setTimeout(() => {
+      strategy.classList.remove("shake");
+    }, 400);
+
+    // reset selection
+    strategy.value = "";
+
+    alert("⚠ Please select Trade Type first");
+
+    return;
+  }
+}
+document.getElementById("strategy").value = "";
+
   mode = m;
 
   manualBox.classList.toggle("active", m==="manual");
@@ -670,8 +759,12 @@ function setStakeMode(m){
    VALIDATION SYSTEM
 ========================= */
 function validateInputs(){
+  mark("strategy");
 
   let valid = true;
+  if(!document.getElementById("strategy").value){
+    valid = false;
+  }
 
   function mark(id){
     const el = document.getElementById(id);
