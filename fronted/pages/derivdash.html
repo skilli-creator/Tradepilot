@@ -352,6 +352,52 @@ input[type=number] {
 input[type=number] {
   -webkit-appearance: none;
 }
+/* =========================
+   🔥 ADVANCED ANALYSIS UI
+========================= */
+.analysis-display {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.analysis-card {
+  flex: 1;
+  min-width: 260px;
+  max-width: 420px;
+
+  background: linear-gradient(145deg, #020617, #0f172a);
+  border-radius: 16px;
+  padding: 25px;
+
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  transition: 0.3s ease;
+}
+
+.analysis-card:hover {
+  transform: scale(1.04);
+}
+
+/* TITLE */
+.analysis-title {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+/* BIG TEXT */
+.analysis-big {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* COLORS */
+.bullish { color: #22c55e; }
+.bearish { color: #ef4444; }
+.neutral { color: #facc15; }
 </style>
 </head>
 
@@ -837,7 +883,37 @@ function runIntelligence(){
   document.getElementById("circle").innerText = confidence + "%";
 
   signal.innerText = "Signal updating...";
-  reasonBox.innerText = "Market structure + momentum analysis active.";
+  const structures = ["Bullish", "Bearish", "Ranging"];
+  const momentums = ["Strong", "Weak", "Explosive"];
+
+  const structure = structures[Math.floor(Math.random()*structures.length)];
+  const momentum = momentums[Math.floor(Math.random()*momentums.length)];
+
+  let structureClass = structure === "Bullish" ? "bullish" :
+                      structure === "Bearish" ? "bearish" : "neutral";
+
+  let momentumClass = momentum === "Strong" ? "bullish" :
+                      momentum === "Weak" ? "bearish" : "neutral";
+
+  reasonBox.innerHTML = `
+    <div class="analysis-display">
+
+      <div class="analysis-card">
+        <div class="analysis-title">Market Structure</div>
+        <div class="analysis-big ${structureClass}">
+          ${structure}
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="analysis-title">Momentum Analysis</div>
+        <div class="analysis-big ${momentumClass}">
+          ${momentum}
+        </div>
+      </div>
+
+    </div>
+  `;
 
   if(mode==="automatic"){
     autoPanel.innerText =
