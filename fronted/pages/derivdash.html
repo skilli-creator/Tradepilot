@@ -398,6 +398,46 @@ input[type=number] {
 .bullish { color: #22c55e; }
 .bearish { color: #ef4444; }
 .neutral { color: #facc15; }
+.history-header{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:10px;
+}
+
+/* container like your screenshot */
+.trade-stats{
+  display:flex;
+  gap:10px;
+}
+
+/* each box */
+.stat-box{
+  background: rgba(30,41,59,0.7);
+  padding:10px 14px;
+  border-radius:10px;
+  min-width:110px;
+  text-align:center;
+  border:1px solid #1e293b;
+}
+
+.stat-title{
+  font-size:11px;
+  color:#94a3b8;
+}
+
+.stat-value{
+  font-size:18px;
+  font-weight:bold;
+  margin-top:4px;
+}
+
+.stat-box.win{
+  border-color:#22c55e;
+}
+
+.stat-box.loss{
+  border-color:#ef4444;
+}
 </style>
 </head>
 
@@ -566,6 +606,26 @@ input[type=number] {
 
 <!-- HISTORY -->
 <div class="card">
+  <div class="history-header">
+  <div class="trade-stats">
+
+    <div class="stat-box" id="allTradesBox">
+      <div class="stat-title">All Trades</div>
+      <div class="stat-value" id="allTrades">0</div>
+    </div>
+
+    <div class="stat-box win">
+      <div class="stat-title">Wins</div>
+      <div class="stat-value" id="wins">0</div>
+    </div>
+
+    <div class="stat-box loss">
+      <div class="stat-title">Losses</div>
+      <div class="stat-value" id="losses">0</div>
+    </div>
+
+  </div>
+</div>
   <h3>Trade History</h3>
 
   <table>
@@ -643,6 +703,7 @@ window.onload = function () {
   setStakeMode("auto");
   initDashboard();
   pollBot();
+  resetStats();
 };
 
 /* =========================
@@ -742,6 +803,11 @@ if(m === "automatic"){
 }
 }
 
+function resetStats(){
+  document.getElementById("allTrades").innerText = 0;
+  document.getElementById("wins").innerText = 0;
+  document.getElementById("losses").innerText = 0;
+}
 /* =========================
    STAKE MODE
 ========================= */
@@ -783,7 +849,7 @@ function validateInputs(){
   // always required
   mark("market");
   mark("tradeType");
-
+  mark("strategy");
   // manual mode
  if(mode === "manual"){
   mark("market");
@@ -1020,9 +1086,27 @@ function runIntelligence(){
 /* =========================
    STATS
 ========================= */
-function updateStats(p,w,l,c){
-  stats.innerHTML = `Profit: $${p.toFixed(2)} | Trades: ${c}`;
+function updateStats(){
+  
+  const rows = document.querySelectorAll("#history tr");
+
+  let wins = 0;
+  let losses = 0;
+
+  rows.forEach(r => {
+    const status = r.children[4]?.innerText;
+
+    if(status === "WIN") wins++;
+    if(status === "LOSS") losses++;
+  });
+
+  const total = wins + losses;
+
+  document.getElementById("allTrades").innerText = total;
+  document.getElementById("wins").innerText = wins;
+  document.getElementById("losses").innerText = losses;
 }
+
 
 /* =========================
    HISTORY
@@ -1061,7 +1145,9 @@ function pollBot(){
         trade.stake,
         trade.result > 0 ? "WIN" : "LOSS",
         trade.result
+        
       );
+      updateStats();
 
     });
 
