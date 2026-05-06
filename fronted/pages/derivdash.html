@@ -454,7 +454,8 @@ input[type=number] {
       <input type="number"
              id="manualStakeInput"
              class="hidden"
-             placeholder="Enter custom stake">
+             min="0.35"
+             placeholder="Enter stake (minimum 0.35)">
     </div>
 
     <div class="input-group">
@@ -591,6 +592,19 @@ function setMode(m){
     btn.innerText = "START BOT";
     btn.style.background = "#22c55e";
   }
+  // 🔥 FIX: Hide manual trade panel when switching modes
+const manualPanel = document.getElementById("manualTradePanel");
+
+if(m === "automatic"){
+  manualPanel.classList.add("hidden");
+  manualPanel.innerHTML = "";
+  manualAnalysisActive = false;
+
+  if(manualAnalysisInterval){
+    clearInterval(manualAnalysisInterval);
+    manualAnalysisInterval = null;
+  }
+}
 }
 
 /* =========================
@@ -661,6 +675,21 @@ function startBot(){
   if(!validateInputs()){
     btn.innerText = "FILL ALL REQUIRED FIELDS";
     btn.style.background = "#ef4444";
+    if(mode === "automatic" && stakeMode === "manual"){
+      const stake = parseFloat(document.getElementById("manualStakeInput").value || 0);
+
+      if(stake < 0.35){
+        btn.innerText = "MIN STAKE IS 0.35";
+        btn.style.background = "#ef4444";
+
+        setTimeout(()=>{
+          btn.innerText = "START BOT";
+          btn.style.background = "#22c55e";
+        },1500);
+
+        return;
+      }
+    }
 
     setTimeout(()=>{
       if(mode === "manual"){
@@ -731,6 +760,24 @@ if(botInterval){
 btn.innerText = "CONNECTING...";
 btn.style.background = "#f59e0b";
 console.log("TOKEN:", localStorage.getItem("deriv_token"));
+const user = JSON.parse(localStorage.getItem("user"));
+const balance = parseFloat(user?.balance || 0);
+
+if(mode === "automatic" && stakeMode === "auto"){
+  const autoStake = balance * 0.02;
+
+  if(autoStake < 0.35){
+    btn.innerText = "BALANCE TOO LOW - USE MANUAL STAKE";
+    btn.style.background = "#ef4444";
+
+    setTimeout(()=>{
+      btn.innerText = "START BOT";
+      btn.style.background = "#22c55e";
+    },2000);
+
+    return;
+  }
+}
 
 /* CALL BACKEND (NON-BLOCKING) */
 fetch("http://127.0.0.1:5000/start", {
@@ -751,9 +798,21 @@ fetch("http://127.0.0.1:5000/start", {
 .then(res => res.json())
 .then(data => {
 
-  console.log("BOT STARTED:", data);
+  console.log("BOT RESPONSE:", data);
 
-  /* DO NOT TOUCH OTHER UI FEATURES */
+  if(data.error || data.message?.toLowerCase().includes("balance")){
+    
+    btn.innerText = "INSUFFICIENT BALANCE";
+    btn.style.background = "#ef4444";
+
+    setTimeout(()=>{
+      btn.innerText = "START BOT";
+      btn.style.background = "#22c55e";
+    },2000);
+
+    return;
+  }
+
   btn.innerText = "BOT RUNNING...";
   btn.style.background = "#ef4444";
 
@@ -886,8 +945,8 @@ function renderManualTradeUI(){
       <h4>Execute Trade</h4>
 
       <div class="input-group">
-        <label>Stake</label>
-        <input type="number" id="m_stake" placeholder="Enter stake">
+        <label>Stake (minimum 0.35)</label>
+       <input type="number" id="m_stake" min="0.35" step="0.01" placeholder="Enter stake">
       </div>
 
         <div class="input-group">
@@ -936,8 +995,8 @@ function renderManualTradeUI(){
       <h4>Execute Trade</h4>
 
       <div class="input-group">
-        <label>Stake</label>
-        <input type="number" id="m_stake" placeholder="Enter stake">
+        <label>Stake (minimum 0.35)</label>
+        <input type="number" id="m_stake" min="0.35" step="0.01" placeholder="Enter stake">
       </div>
 
       <div class="input-group">
@@ -979,8 +1038,8 @@ function renderManualTradeUI(){
       <h4>Execute Trade</h4>
 
       <div class="input-group">
-        <label>Stake</label>
-        <input type="number" id="m_stake" placeholder="Enter stake">
+        <label>Stake (minimum 0.35)</label>
+        <input type="number" id="m_stake" min="0.35" step="0.01" placeholder="Enter stake">
       </div>
 
       <div class="input-group">
@@ -1048,8 +1107,8 @@ function renderManualTradeUI(){
       <h4>Execute Trade</h4>
 
       <div class="input-group">
-        <label>Stake</label>
-        <input type="number" id="m_stake" placeholder="Enter stake">
+        <label>Stake (minimum 0.35)</label>
+        <input type="number" id="m_stake" min="0.35" step="0.01" placeholder="Enter stake">
       </div>
 
   
@@ -1106,11 +1165,13 @@ function placeManualTrade(direction){
     console.log("❌ Invalid inputs");
     return;
   }
+  
 
   const stake = document.getElementById("m_stake").value;
   const duration = document.getElementById("duration").value;
   const market = document.getElementById("market").value;
   const tradeType = document.getElementById("tradeType").value;
+  
 
   console.log("✅ Manual Trade:", {
     direction,
@@ -1118,6 +1179,7 @@ function placeManualTrade(direction){
     duration,
     market,
     tradeType
+
   });
 
 
@@ -1145,6 +1207,12 @@ function validateManualTrade(){
   }
 
   const tradeType = document.getElementById("tradeType").value;
+  const stake = parseFloat(document.getElementById("m_stake")?.value || 0);
+
+  if(stake < 0.35){
+    document.getElementById("m_stake").classList.add("error");
+    valid = false;
+  }
 
   // COMMON
   mark("m_stake");
