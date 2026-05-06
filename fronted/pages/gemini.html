@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradePilot Pro | AI Dashboard</title>
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top right, #0f172a, #020617);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* LAYOUT */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 1.5rem;
+        }
+
+        .main-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        /* COMPONENTS */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .card h3 { margin-top: 0; font-size: 1.1rem; color: #fff; border-left: 4px solid var(--accent-green); padding-left: 10px; }
+
+        /* MODE TOGGLE */
+        .mode-options { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .mode-box {
+            flex: 1; padding: 1rem; background: var(--bg-dark); border-radius: 12px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .mode-box.active { border-color: var(--accent-green); background: rgba(34, 197, 94, 0.05); }
+
+        /* FORM STYLING */
+        .trade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        input, select {
+            padding: 0.75rem; background: var(--bg-dark); border: 1px solid var(--border-color);
+            border-radius: 8px; color: white; outline: none; transition: 0.2s;
+        }
+        input:focus, select:focus { border-color: var(--accent-green); box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); }
+
+        /* BUTTONS */
+        .btn {
+            width: 100%; padding: 1rem; border-radius: 10px; border: none; font-weight: 700;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-run { background: var(--accent-green); color: #000; margin-top: 1rem; }
+        .btn-run:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
+
+        /* STATS BOXES */
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .stat-card { background: var(--bg-dark); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
+        .stat-val { font-size: 1.5rem; font-weight: 800; display: block; }
+        .win-text { color: var(--accent-green); }
+        .loss-text { color: var(--accent-red); }
+
+        /* UTILS */
+        .hidden { display: none; }
+        .error { border-color: var(--accent-red) !important; animation: shake 0.3s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-green);">🔷 TradePilot Pro</div>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div id="balance" style="font-weight: 600;">$0.00</div>
+        <div id="accountType" style="background: gold; color: black; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">DEMO</div>
+        <button onclick="exitApp()" style="background: var(--accent-red); color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer;">Exit</button>
+    </div>
+</header>
+
+<main class="dashboard">
+    <div class="main-col">
+        <!-- MODE SELECTOR -->
+        <section class="card">
+            <h3>Trading Mode</h3>
+            <div class="mode-options">
+                <div class="mode-box active" onclick="setMode('manual')" id="manualBox">
+                    <strong>🧠 Manual</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin: 5px 0 0;">Analysis-led execution</p>
+                </div>
+                <div class="mode-box" onclick="setMode('automatic')" id="autoBox">
+                    <strong>🤖 Automatic</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin: 5px 0 0;">Algorithmic execution</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETUP -->
+        <section class="card">
+            <h3>Parameters</h3>
+            <div class="trade-grid">
+                <div class="input-group">
+                    <label>Market</label>
+                    <select id="market">
+                        <option value="R_100">Volatility 100 Index</option>
+                        <option value="R_50">Volatility 50 Index</option>
+                        <option value="1HZ100V">Volatility 100 (1s)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Contract Type</label>
+                    <select id="tradeType" onchange="updateStrategies()">
+                        <option value="Rise/Fall">Rise / Fall</option>
+                        <option value="Even/Odd">Even / Odd</option>
+                        <option value="Over/Under">Over / Under</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Strategy</label>
+                    <select id="strategy"></select>
+                </div>
+                <div class="input-group auto-only">
+                    <label>Take Profit ($)</label>
+                    <input type="number" id="tp" placeholder="50.00">
+                </div>
+                <div class="input-group auto-only">
+                    <label>Stop Loss ($)</label>
+                    <input type="number" id="sl" placeholder="20.00">
+                </div>
+            </div>
+            <button class="btn btn-run" id="mainBtn" onclick="handleMainAction()">Get Entry Analysis</button>
+        </section>
+
+        <!-- INTELLIGENCE PANEL (DASHBOARD CENTER) -->
+        <section class="card">
+            <h3>Market Intelligence</h3>
+            <div id="manualTradePanel" class="hidden" style="margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                <!-- Dynamically injected manual controls -->
+            </div>
+            <div style="display: flex; align-items: center; gap: 30px;">
+                <div id="confidenceCircle" style="width: 100px; height: 100px; border-radius: 50%; border: 8px solid var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">0%</div>
+                <div>
+                    <div id="signalStatus" style="font-size: 1.2rem; font-weight: 600;">Scanning Markets...</div>
+                    <div id="reasoning" style="color: var(--text-dim); font-size: 0.85rem;">Select market parameters to start analysis engine.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="side-col">
+        <section class="card">
+            <h3>Account Stats</h3>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <label>Total</label>
+                    <span class="stat-val" id="statTotal">0</span>
+                </div>
+                <div class="stat-card">
+                    <label>Wins</label>
+                    <span class="stat-val win-text" id="statWins">0</span>
+                </div>
+                <div class="stat-card">
+                    <label>Loss</label>
+                    <span class="stat-val loss-text" id="statLoss">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top: 1.5rem; max-height: 400px; overflow-y: auto;">
+            <h3>Live History</h3>
+            <div id="historyLog" style="font-size: 0.8rem;">
+                <p style="color: var(--text-dim); text-align: center;">No trades yet.</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    const STRATEGY_MAP = {
+        "Rise/Fall": ["Trend Following", "Mean Reversion", "Bollinger Breakout"],
+        "Even/Odd": ["Digit Frequency", "Last Digit Patterns", "Even Streak Hunter"],
+        "Over/Under": ["Barrier Defense", "Volatility Expansion"]
+    };
+
+    let currentMode = 'manual';
+    let isRunning = false;
+
+    // Initialization
+    window.onload = () => {
+        updateStrategies();
+        loadSession();
+    };
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('manualBox').classList.toggle('active', mode === 'manual');
+        document.getElementById('autoBox').classList.toggle('active', mode === 'automatic');
+        
+        // Toggle visibility of auto-specific fields
+        document.querySelectorAll('.auto-only').forEach(el => {
+            el.style.display = (mode === 'automatic') ? 'flex' : 'none';
+        });
+
+        document.getElementById('mainBtn').innerText = (mode === 'manual') ? 'Get Entry Analysis' : 'Start Bot';
+    }
+
+    function updateStrategies() {
+        const type = document.getElementById('tradeType').value;
+        const stratSelect = document.getElementById('strategy');
+        stratSelect.innerHTML = STRATEGY_MAP[type].map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function handleMainAction() {
+        if (isRunning) {
+            stopEngine();
+        } else {
+            startEngine();
+        }
+    }
+
+    function startEngine() {
+        if (!validateInputs()) return;
+        isRunning = true;
+        const btn = document.getElementById('mainBtn');
+        btn.innerText = (currentMode === 'manual') ? 'Stop Analysis' : 'Stop Bot';
+        btn.style.background = 'var(--accent-red)';
+
+        if (currentMode === 'manual') {
+            document.getElementById('manualTradePanel').classList.remove('hidden');
+            renderManualControls();
+        }
+        
+        // Mock Analysis Loop
+        window.analysisInterval = setInterval(simulateAnalysis, 2000);
+    }
+
+    function stopEngine() {
+        isRunning = false;
+        clearInterval(window.analysisInterval);
+        const btn = document.getElementById('mainBtn');
+        btn.innerText = (currentMode === 'manual') ? 'Get Entry Analysis' : 'Start Bot';
+        btn.style.background = 'var(--accent-green)';
+        document.getElementById('manualTradePanel').classList.add('hidden');
+    }
+
+    function simulateAnalysis() {
+        const conf = Math.floor(Math.random() * 40) + 60;
+        document.getElementById('confidenceCircle').innerText = conf + '%';
+        document.getElementById('signalStatus').innerText = conf > 80 ? 'STRONG SIGNAL' : 'Neutral Market';
+        document.getElementById('reasoning').innerText = `Algorithm detecting ${conf > 80 ? 'high' : 'low'} volatility trend.`;
+    }
+
+    function renderManualControls() {
+        const panel = document.getElementById('manualTradePanel');
+        panel.innerHTML = `
+            <div class="trade-grid">
+                <div class="input-group">
+                    <label>Manual Stake</label>
+                    <input type="number" id="mStake" value="10.00">
+                </div>
+                <div style="display:flex; gap: 10px; align-items: flex-end;">
+                    <button class="btn" style="background:var(--accent-green)" onclick="executeManual('Rise')">Call</button>
+                    <button class="btn" style="background:var(--accent-red)" onclick="executeManual('Fall')">Put</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function executeManual(dir) {
+        const stake = document.getElementById('mStake').value;
+        addHistoryRow(stake, dir);
+    }
+
+    function addHistoryRow(stake, dir) {
+        const log = document.getElementById('historyLog');
+        const time = new Date().toLocaleTimeString();
+        const html = `
+            <div style="display:flex; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid #1e293b;">
+                <span>${time} | <strong>${dir}</strong></span>
+                <span>$${stake}</span>
+                <span class="win-text">PENDING</span>
+            </div>
+        `;
+        log.insertAdjacentHTML('afterbegin', html);
+    }
+
+    function validateInputs() {
+        let valid = true;
+        ['market', 'strategy'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value) { el.classList.add('error'); valid = false; }
+            else { el.classList.remove('error'); }
+        });
+        return valid;
+    }
+
+    function loadSession() {
+        const user = JSON.parse(localStorage.getItem('user')) || { balance: "1,000.00", account_id: "CR12345" };
+        document.getElementById('balance').innerText = `$${user.balance}`;
+    }
+
+    function exitApp() {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>
