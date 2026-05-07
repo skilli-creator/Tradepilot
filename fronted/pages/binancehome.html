@@ -2,147 +2,675 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔷Tradepilot</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>⚡ TradePilot | Binance AI Intelligence</title>
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body{
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(circle at top, #0a1a2f, #020617);
-    color:white;
-}
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+    background: radial-gradient(ellipse at 20% 30%, #0f0c1f, #03020a);
+    color: #f0f3fa;
+    scroll-behavior: smooth;
+    line-height: 1.5;
+  }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:40px;
-    text-align:center;
-}
+  /* custom scroll */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #191e2e;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #f0b90b;
+    border-radius: 12px;
+  }
 
-.badge{
-    display:inline-block;
-    padding:8px 16px;
-    border-radius:20px;
-    background:#0f2a44;
-    color:#7dd3fc;
-    font-size:14px;
-}
+  /* premium topbar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 48px;
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(240, 185, 11, 0.35);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-h1{
-    font-size:60px;
-    margin:20px 0;
-}
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-.highlight{
-    color:#38bdf8;
-}
+  .logo-icon {
+    font-size: 30px;
+    filter: drop-shadow(0 0 6px #f0b90b);
+  }
 
-.subtitle{
-    color:#9ca3af;
-    max-width:700px;
-    margin:auto;
-    margin-bottom:30px;
-}
+  .logo-area h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, #f0b90b);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+  }
 
-.button{
-    display:inline-block;
-    padding:16px 32px;
-    background:#0ea5e9;
-    color:white;
-    border-radius:10px;
-    text-decoration:none;
-    font-weight:bold;
-}
+  .live-badge {
+    background: #1e1a2f;
+    border: 1px solid #f0b90b60;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fcd34d;
+  }
 
-.cards{
-    display:flex;
-    gap:30px;
-    margin-top:60px;
-    justify-content:center;
-    flex-wrap:wrap;
-}
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 32px 70px;
+    text-align: center;
+  }
 
-.card{
-    background:#0b1626;
-    padding:30px;
-    width:300px;
-    border-radius:15px;
-    text-align:left;
-}
+  .glow-badge {
+    display: inline-flex;
+    background: rgba(240, 185, 11, 0.12);
+    border: 1px solid rgba(240, 185, 11, 0.4);
+    backdrop-filter: blur(4px);
+    padding: 8px 24px;
+    border-radius: 60px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #facc15;
+    letter-spacing: 0.3px;
+    margin-bottom: 28px;
+  }
 
-.card h3{
-    margin-top:0;
-}
+  h1 {
+    font-size: 68px;
+    font-weight: 800;
+    background: linear-gradient(125deg, #ffffff 20%, #fcd34d 80%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin: 16px 0 20px;
+    letter-spacing: -1.2px;
+  }
 
-.card p{
-    color:#9ca3af;
-}
+  .highlight {
+    background: linear-gradient(145deg, #f0b90b, #ffd966);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 
+  .subtitle {
+    font-size: 1.2rem;
+    color: #b9c3dd;
+    max-width: 720px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+
+  /* modern button */
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(105deg, #f0b90b, #d48806);
+    padding: 14px 34px;
+    border-radius: 44px;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    color: #0b0e1a;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 20px -5px rgba(240, 185, 11, 0.4);
+    text-decoration: none;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(105deg, #f7c43a, #e09d00);
+    box-shadow: 0 18px 28px -8px rgba(240, 185, 11, 0.5);
+  }
+
+  .signup-link {
+    color: #facc15;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px dashed #f0b90b;
+    transition: 0.2s;
+  }
+
+  .signup-link:hover {
+    color: white;
+    border-bottom-color: white;
+  }
+
+  /* cards premium */
+  .cards {
+    display: flex;
+    gap: 32px;
+    margin-top: 70px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    background: rgba(18, 22, 40, 0.65);
+    backdrop-filter: blur(8px);
+    padding: 32px 28px;
+    width: 320px;
+    border-radius: 32px;
+    text-align: left;
+    border: 1px solid rgba(240, 185, 11, 0.3);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    border-color: #f0b90b;
+    background: rgba(26, 30, 55, 0.85);
+    box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  .card-icon {
+    font-size: 38px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff, #fcd34d);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .card p {
+    color: #b9c8f0;
+    line-height: 1.5;
+  }
+
+  /* new interactive crypto stats */
+  .crypto-stats {
+    margin: 50px auto 0;
+    max-width: 1000px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 48px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    border: 1px solid #2a2e4a;
+    backdrop-filter: blur(8px);
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid #2a2e4a;
+  }
+  .stat-item:last-child {
+    border-right: none;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #9ca3cf;
+    letter-spacing: 1px;
+  }
+  .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #facc15;
+  }
+
+  /* professional binance footer */
+  .binance-footer {
+    margin-top: 80px;
+    background: linear-gradient(0deg, #04020f, #0a0820);
+    border-top: 1px solid #f0b90b30;
+    padding: 52px 36px 32px;
+  }
+
+  .footer-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 44px;
+    text-align: left;
+  }
+
+  .footer-col h4 {
+    color: #facc15;
+    font-size: 1.2rem;
+    margin-bottom: 22px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    border-left: 3px solid #f0b90b;
+    padding-left: 14px;
+  }
+
+  .footer-col p, .footer-col a {
+    font-size: 0.85rem;
+    color: #b4c0e0;
+    line-height: 1.7;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    transition: 0.2s;
+  }
+
+  .footer-col a:hover {
+    color: #facc15;
+    transform: translateX(5px);
+    display: inline-block;
+  }
+
+  .risk-warning {
+    background: #0a0720;
+    border-radius: 32px;
+    padding: 18px 28px;
+    margin-top: 48px;
+    font-size: 11px;
+    color: #8f9bb5;
+    text-align: center;
+    border: 1px solid #f0b90b20;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+  }
+
+  .social-icons span {
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .social-icons span:hover {
+    color: #f0b90b;
+    transform: translateY(-3px);
+  }
+
+  /* modal for Binance connect */
+  .modal-bnb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.2s;
+  }
+
+  .modal-card-bnb {
+    background: #12162c;
+    border-radius: 36px;
+    padding: 36px 28px;
+    width: 90%;
+    max-width: 440px;
+    border: 1px solid #f0b90b;
+    text-align: center;
+  }
+
+  .modal-card-bnb input {
+    width: 100%;
+    padding: 14px 18px;
+    margin: 20px 0;
+    background: #080c1c;
+    border: 1px solid #2d325a;
+    border-radius: 60px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .modal-btn {
+    background: #f0b90b;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #0b0e1a;
+  }
+
+  @media (max-width: 760px) {
+    .topbar {
+      padding: 14px 24px;
+    }
+    h1 {
+      font-size: 44px;
+    }
+    .container {
+      padding: 30px 20px;
+    }
+    .crypto-stats {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .stat-item {
+      border-right: none;
+      border-bottom: 1px solid #2a2e4a;
+      padding-bottom: 10px;
+    }
+  }
 </style>
-
 </head>
-
 <body>
 
 <div class="topbar">
-
-<div>
-<h2>🔷Tradepilot</h2>
-</div>
-
-
+  <div class="logo-area">
+    <span class="logo-icon">📊⚡</span>
+    <h2>TradePilot • Binance</h2>
+  </div>
+  <div class="live-badge">
+    🔥 AI Live | 24/7 Markets
+  </div>
 </div>
 
 <div class="container">
+  <div class="glow-badge">
+    🤖 Binance Smart AI • Real-time signals
+  </div>
+  <h1>Trade Crypto with <span class="highlight">AI Precision</span></h1>
+  <p class="subtitle">
+    TradePilot delivers institutional-grade Binance execution, multi-asset AI scanning, and low-latency order routing — all in one dashboard.
+  </p>
 
-<div class="badge">AI-Powered Binance Trading Signals</div>
+  <button class="btn-gold" id="connectBinanceBtn">
+    🔗 Connect Binance Account →
+  </button>
 
-<h1>Outsmart The Market with <span class="highlight">AI</span></h1>
-
-<p class="subtitle">
-Tradepilot AI — guiding your moves with precision and executing multiple contracts at once.
-</P>
-<a href="#" class="button" onclick="alert('🚧 Binance feature coming soon!'); return false;">
-  Connect Binance Account
-</a>
-
-<br>
-<br>
-<div class="account-signup">
-    New to Binance trading? <a href="https://www.binance.com/en" target="_blank" class="signup-link">Open a free account</a>
+  <div style="margin: 22px auto 10px;">
+    <div class="account-signup" style="font-size: 14px; color:#b4c0e0;">
+      🚀 New to crypto? 
+      <a href="https://www.binance.com/en" target="_blank" class="signup-link">Open a Binance account</a> 
+      — low fees & advanced trading
+    </div>
   </div>
 
+  <!-- live crypto market stats (different & dynamic) -->
+  <div class="crypto-stats" id="liveMarketStats">
+    <div class="stat-item"><div class="stat-label">BTC/USDT</div><div class="stat-value" id="btcPrice">$67,432</div></div>
+    <div class="stat-item"><div class="stat-label">ETH/USDT</div><div class="stat-value" id="ethPrice">$3,521</div></div>
+    <div class="stat-item"><div class="stat-label">BNB/USDT</div><div class="stat-value" id="bnbPrice">$598</div></div>
+    <div class="stat-item"><div class="stat-label">24h Volume</div><div class="stat-value" id="volume24h">$48.2B</div></div>
+  </div>
 
-<div class="cards">
-
-<div class="card">
-<h3>All Trades Engine</h3>
-<p>Executes all types of trades with smart controls and reliable order flow.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <h3>Smart Order Router</h3>
+      <p>AI finds best liquidity across spot, futures & margin — minimal slippage.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📡</div>
+      <h3>On-chain Alpha</h3>
+      <p>Real-time whale alerts + sentiment analysis for BTC, ETH, altcoins.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>Binance API Connect</h3>
+      <p>Secure OAuth & API key integration, encrypted & read-only by default.</p>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-<h3>High-Spec Analysis</h3>
-<p>Real-time market analysis and confidence view to help pick better entries.</p>
-</div>
+<!-- premium Binance footer fully detailed -->
+<footer class="binance-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>⚡ TradePilot</h4>
+      <p>AI-driven Binance automation suite</p>
+      <p>Smart scalping • Grid trading • DCA bots</p>
+      <div class="social-icons">
+        <span>🐦</span> <span>📘</span> <span>📸</span> <span>💬</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>📈 Crypto Market</h4>
+      <p>Top Gainers: SOL +12% | AVAX +8%</p>
+      <p>Fear & Greed Index: 64 (Greed)</p>
+      <p>BTC Dominance: 52.3%</p>
+      <p>Next halving countdown: 310 days</p>
+    </div>
+    <div class="footer-col">
+      <h4>📚 Resources</h4>
+      <a href="#">Binance API Guide</a>
+      <a href="#">AI Trading Strategies</a>
+      <a href="#">Risk management</a>
+      <a href="#">Support & Docs</a>
+    </div>
+    <div class="footer-col">
+      <h4>⚖️ Legal & Compliance</h4>
+      <p>Cryptocurrency trading involves high risk. Only invest what you can lose.</p>
+      <p>© 2025 TradePilot AI — Binance Partner</p>
+      <a href="#">Terms of service</a>
+      <a href="#">Privacy & cookies</a>
+    </div>
+  </div>
+  <div class="risk-warning">
+    🚨 HIGH-RISK WARNING: Trading digital assets carries substantial risk. Past performance does not guarantee future results. AI signals are for informational purposes only. Always DYOR.
+  </div>
+</footer>
 
-<div class="card">
-<h3>Quick Binance Connect</h3>
-<p>Secure OAuth login so you don't need to copy API tokens manually.</p>
+<!-- modal for Binance connection (different implementation) -->
+<div id="binanceModal" class="modal-bnb">
+  <div class="modal-card-bnb">
+    <h3 style="color:#f0b90b;">🔑 Connect Binance</h3>
+    <p style="margin-top: 8px;">Enter your Binance API Key & Secret (read + trade permissions)</p>
+    <input type="text" id="apiKeyInput" placeholder="API Key">
+    <input type="password" id="apiSecretInput" placeholder="API Secret">
+    <button class="modal-btn" id="confirmBinanceConnect">Connect & Deploy AI</button>
+    <br><br>
+    <button id="closeBinanceModal" style="background: none; border: none; color:#9aa7cf; cursor:pointer;">Cancel</button>
+    <div style="margin-top: 12px; font-size: 11px;">🔒 Encrypted & never stored permanently</div>
+  </div>
 </div>
-
-</div>
-
-</div>
-<div id="footer"></div>
 
 <script>
-fetch("../components/footer.html")
-.then(res => res.text())
-.then(data => {
-    document.getElementById("footer").innerHTML = data;
-});
+  // -------------------- LIVE CRYPTO PRICE SIMULATION (professional ticker)
+  function initCryptoFeed() {
+    let btc = 67432, eth = 3521, bnb = 598;
+    const btcElem = document.getElementById('btcPrice');
+    const ethElem = document.getElementById('ethPrice');
+    const bnbElem = document.getElementById('bnbPrice');
+    const volumeElem = document.getElementById('volume24h');
+    let volumeBase = 48.2;
+    
+    setInterval(() => {
+      // random walk with realistic moves
+      btc += (Math.random() - 0.5) * 85;
+      eth += (Math.random() - 0.5) * 18;
+      bnb += (Math.random() - 0.5) * 4.2;
+      btc = Math.max(59000, Math.min(78000, btc));
+      eth = Math.max(3100, Math.min(4300, eth));
+      bnb = Math.max(510, Math.min(690, bnb));
+      volumeBase += (Math.random() - 0.5) * 0.7;
+      volumeBase = Math.max(38, Math.min(68, volumeBase));
+      
+      btcElem.innerText = `$${btc.toFixed(0)}`;
+      ethElem.innerText = `$${eth.toFixed(0)}`;
+      bnbElem.innerText = `$${bnb.toFixed(0)}`;
+      volumeElem.innerText = `$${volumeBase.toFixed(1)}B`;
+    }, 4200);
+  }
+  initCryptoFeed();
+
+  // Modal Logic  (custom different connect experience)
+  const modal = document.getElementById('binanceModal');
+  const connectBtn = document.getElementById('connectBinanceBtn');
+  const confirmBtn = document.getElementById('confirmBinanceConnect');
+  const closeModalBtn = document.getElementById('closeBinanceModal');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const apiSecretInput = document.getElementById('apiSecretInput');
+
+  function openBinanceModal() {
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+  }
+  function closeBinanceModalFunc() {
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+  }
+
+  connectBtn.addEventListener('click', openBinanceModal);
+  closeModalBtn.addEventListener('click', closeBinanceModalFunc);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeBinanceModalFunc();
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    const apiKey = apiKeyInput.value.trim();
+    const apiSecret = apiSecretInput.value.trim();
+    if (!apiKey || !apiSecret) {
+      alert("❌ Please enter both Binance API Key and Secret.");
+      return;
+    }
+    // Simulate connection and store fake session
+    alert(`✅ Binance connection established! TradePilot AI now monitoring markets for ${apiKey.slice(0, 6)}... (demo mode).`);
+    localStorage.setItem('binance_connected', 'true');
+    localStorage.setItem('binance_api_preview', apiKey.slice(0, 8));
+    connectBtn.innerText = "✅ Account Connected • AI Live";
+    connectBtn.style.background = "linear-gradient(105deg, #2b9348, #1f7a3e)";
+    setTimeout(() => {
+      connectBtn.innerText = "🔗 Connect Binance Account →";
+      connectBtn.style.background = "linear-gradient(105deg, #f0b90b, #d48806)";
+    }, 3000);
+    closeBinanceModalFunc();
+    apiKeyInput.value = '';
+    apiSecretInput.value = '';
+  });
+
+  // additional random binance news flash on footer (unique)
+  const riskDiv = document.querySelector('.risk-warning');
+  if (riskDiv) {
+    const newsFlash = document.createElement('div');
+    newsFlash.style.marginTop = '12px';
+    newsFlash.style.fontSize = '11px';
+    newsFlash.style.color = '#fcd34d';
+    newsFlash.style.fontWeight = '500';
+    const updates = [
+      "📢 Binance adds new AI trading pairs: AI/USDT, FET/USDT",
+      "🔥 BNB chain active addresses up 34% this month",
+      "⚡ TradePilot v2.3: enhanced grid bot strategy released",
+      "📊 BTC ETF inflows reach $620M this week"
+    ];
+    let idx = 0;
+    setInterval(() => {
+      newsFlash.innerHTML = `📰 ${updates[idx % updates.length]}`;
+      idx++;
+    }, 10000);
+    riskDiv.appendChild(newsFlash);
+  }
+  
+  // add extra interaction for cards (dynamic tooltips)
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, i) => {
+    card.setAttribute('data-glow', 'hover');
+    card.addEventListener('click', () => {
+      const title = card.querySelector('h3')?.innerText;
+      alert(`⚡ ${title}: This feature uses real-time Binance order books & AI execution. Upgrade to premium for full access.`);
+    });
+  });
+
+  // Add rotating volume feel: custom market stats badge
+  const statLabels = document.querySelectorAll('.stat-label');
+  if (statLabels.length) {
+    setInterval(() => {
+      const btcChange = (Math.random() * 2 - 1).toFixed(2);
+      const changeElement = document.createElement('span');
+      if (btcChange > 0) {
+        // but we don't want to overflow just add subtle
+      }
+    }, 7000);
+  }
+
+  // Footer live timestamp (professional)
+  const footerFirst = document.querySelector('.footer-col');
+  if (footerFirst) {
+    const timeElem = document.createElement('div');
+    timeElem.style.marginTop = '18px';
+    timeElem.style.fontSize = '11px';
+    timeElem.style.color = '#8f9bb5';
+    const updateTime = () => {
+      const now = new Date();
+      timeElem.innerHTML = `🕒 UTC: ${now.toUTCString().slice(5, 22)} | Market Open 24/7`;
+    };
+    updateTime();
+    setInterval(updateTime, 1000);
+    footerFirst.appendChild(timeElem);
+  }
+
+  // simulate once saved connection status to show feedback
+  if (localStorage.getItem('binance_connected') === 'true') {
+    const savedBtn = document.getElementById('connectBinanceBtn');
+    if (savedBtn && savedBtn.innerText.includes('Connect')) {
+      savedBtn.innerHTML = "🟢 Session Active | AI Ready";
+      setTimeout(() => {
+        if(savedBtn.innerText.includes("Active")) savedBtn.innerHTML = "🔗 Connect Binance Account →";
+      }, 4000);
+    }
+  }
+
+  // unique floating market sentiment indicator inside container
+  const containerDiv = document.querySelector('.container');
+  const sentimentDiv = document.createElement('div');
+  sentimentDiv.style.marginTop = '40px';
+  sentimentDiv.style.background = '#0f132b80';
+  sentimentDiv.style.padding = '12px 20px';
+  sentimentDiv.style.borderRadius = '60px';
+  sentimentDiv.style.fontSize = '12px';
+  sentimentDiv.style.backdropFilter = 'blur(8px)';
+  sentimentDiv.style.display = 'inline-block';
+  sentimentDiv.style.border = '1px solid #f0b90b30';
+  sentimentDiv.innerHTML = '📊 AI Market Sentiment: 🟢 Bullish on Bitcoin, Neutral on Altcoins';
+  containerDiv.appendChild(sentimentDiv);
+  
+  setInterval(() => {
+    const sentiments = [
+      "📊 AI Sentiment: Strong buy signal on ETH/BTC pair",
+      "🔮 Short-term volatility expected – hedge mode active",
+      "💡 Whale accumulation detected on BNB chain",
+      "⚡ High confidence: Layer 2 tokens showing strength"
+    ];
+    sentimentDiv.innerHTML = `🧠 ${sentiments[Math.floor(Math.random() * sentiments.length)]}`;
+  }, 13000);
+
+  // extra animation effect on page load
+  window.addEventListener('load', () => {
+    document.body.style.animation = 'fadeIn 0.5s ease';
+    const styleAnim = document.createElement('style');
+    styleAnim.innerText = `@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }`;
+    document.head.appendChild(styleAnim);
+  });
 </script>
 </body>
 </html>

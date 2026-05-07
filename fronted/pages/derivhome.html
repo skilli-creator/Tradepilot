@@ -2,341 +2,774 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔷Tradepilot</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🔷 Tradepilot AI | Precision Trading Intelligence</title>
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body{
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: radial-gradient(circle at top, #0a1a2f, #020617);
-    color:white;
-}
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    background: radial-gradient(ellipse at 30% 10%, #0b1a2e, #03050b);
+    color: #f1f5f9;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:40px;
-    text-align:center;
-}
+  /* custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2d3a5e;
+    border-radius: 8px;
+  }
 
-.badge{
-    display:inline-block;
-    padding:8px 16px;
-    border-radius:20px;
-    background:#0f2a44;
-    color:#7dd3fc;
-    font-size:14px;
-}
+  /* glassmorph top bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    background: rgba(3, 7, 18, 0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
 
-h1{
-    font-size:60px;
-    margin:20px 0;
-}
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-.highlight{
-    color:#38bdf8;
-}
+  .logo-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 0 6px #38bdf8);
+  }
 
-.subtitle{
-    color:#9ca3af;
-    max-width:700px;
-    margin:auto;
-    margin-bottom:40px;
-}
+  .logo h2 {
+    font-weight: 700;
+    background: linear-gradient(135deg, #e0f2fe, #38bdf8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    letter-spacing: -0.3px;
+  }
 
-/* BUTTONS */
-.button{
-    display:inline-block;
-    padding:14px 28px;
-    background:#0ea5e9;
-    color:white;
-    border-radius:10px;
-    text-decoration:none;
-    font-weight:bold;
-    cursor:pointer;
-    border:none;
-    margin:10px;
-}
+  .theme-toggle {
+    background: #111827;
+    border: 1px solid #2d3a5e;
+    border-radius: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-.secondary-btn{
-    background:#1e293b;
-    border:1px solid #334155;
-}
+  .theme-toggle:hover {
+    background: #1e293b;
+    border-color: #38bdf8;
+    color: white;
+  }
 
-/* CARD SECTION */
-.cards{
-    display:flex;
-    gap:30px;
-    margin-top:60px;
-    justify-content:center;
-    flex-wrap:wrap;
-}
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 28px;
+    text-align: center;
+  }
 
-.card{
-    background:#0b1626;
-    padding:30px;
-    width:300px;
-    border-radius:15px;
-    text-align:left;
-}
+  .badge-glow {
+    display: inline-flex;
+    background: rgba(15, 42, 68, 0.7);
+    backdrop-filter: blur(4px);
+    padding: 8px 20px;
+    border-radius: 60px;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    font-size: 13px;
+    font-weight: 500;
+    color: #7dd3fc;
+    letter-spacing: 0.3px;
+    margin-bottom: 24px;
+  }
 
-.card h3{
-    margin-top:0;
-}
+  h1 {
+    font-size: 64px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin: 16px 0 20px;
+    letter-spacing: -1px;
+  }
 
-.card p{
-    color:#9ca3af;
-}
+  .highlight {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 
-/* TOKEN INPUT */
-.token-box{
-    margin-top:25px;
-}
+  .subtitle {
+    font-size: 1.2rem;
+    color: #9ca3af;
+    max-width: 700px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+  }
 
-input{
-    padding:14px;
-    width:340px;
-    border-radius:8px;
-    border:none;
-    outline:none;
-    margin-top:10px;
-    text-align:center;
-    background:#0b1626;
-    color:white;
-    border:1px solid #1e293b;
-}
+  /* button styles */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: linear-gradient(105deg, #0ea5e9, #3b82f6);
+    color: white;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 14px rgba(14, 165, 233, 0.2);
+  }
 
-/* SECTION TITLE */
-.section-title{
-    margin-top:40px;
-    font-size:18px;
-    color:#94a3b8;
-}
+  .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(14, 165, 233, 0.3);
+    background: linear-gradient(105deg, #0284c7, #2563eb);
+  }
 
-/* POWERED BY */
-.powered{
-    margin-top:70px;
-    font-size:13px;
-    color:#64748b;
-    padding-top:20px;
-    border-top:1px solid #1e293b;
-}
+  .secondary-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    box-shadow: none;
+  }
 
-.powered span{
-    color:#38bdf8;
-    font-weight:bold;
-}
-.password-wrapper {
+  .secondary-btn:hover {
+    background: #2d3a5e;
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+  }
+
+  /* connection panel */
+  .connect-panel {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 36px;
+    padding: 32px 28px;
+    margin: 40px 0 20px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    transition: all 0.2s;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .or-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 20px 0;
+    color: #4b5563;
+    font-size: 14px;
+  }
+
+  .or-divider hr {
+    width: 80px;
+    background: #2d3a5e;
+    height: 1px;
+    border: none;
+  }
+
+  .token-box {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .password-wrapper {
     position: relative;
-    width: 340px;
-    margin: auto;
-}
-
-.password-wrapper input {
     width: 100%;
-    padding-right: 40px;
-}
+    margin-bottom: 18px;
+  }
 
-.toggle-eye {
+  .password-wrapper input {
+    width: 100%;
+    padding: 14px 44px 14px 20px;
+    background: #0f172a;
+    border: 1.5px solid #1e293b;
+    border-radius: 60px;
+    color: #f1f5f9;
+    font-size: 14px;
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .password-wrapper input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  }
+
+  .toggle-eye {
     position: absolute;
-    right: 12px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #94a3b8;
-    font-size: 16px;
-    user-select: none;
-}
+    font-size: 18px;
+    transition: 0.2s;
+    background: none;
+    border: none;
+  }
 
-.toggle-eye:hover {
+  .toggle-eye:hover {
     color: #38bdf8;
-}
+  }
 
+  .account-signup {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #9ca3af;
+  }
+
+  .signup-link {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px dashed #38bdf8;
+  }
+
+  .signup-link:hover {
+    color: #7dd3fc;
+  }
+
+  /* enhanced cards */
+  .cards {
+    display: flex;
+    gap: 28px;
+    margin-top: 70px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    background: rgba(11, 22, 38, 0.75);
+    backdrop-filter: blur(4px);
+    padding: 28px 24px;
+    width: 300px;
+    border-radius: 28px;
+    text-align: left;
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: #38bdf8;
+    background: rgba(20, 34, 58, 0.85);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.4);
+  }
+
+  .card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    background: linear-gradient(120deg, #f1f5f9, #b9d0f0);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .card p {
+    color: #a0afc7;
+    line-height: 1.5;
+  }
+
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+
+  /* customization section */
+  .customization-row {
+    margin-top: 56px;
+    background: rgba(2, 6, 23, 0.5);
+    border-radius: 32px;
+    padding: 28px 24px;
+    border: 1px solid #1e293b;
+  }
+
+  .custom-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .theme-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .theme-chip {
+    background: #0f172a;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #334155;
+    transition: all 0.2s ease;
+  }
+
+  .theme-chip.active-theme {
+    background: #0ea5e9;
+    border-color: #38bdf8;
+    color: white;
+    box-shadow: 0 0 8px #0ea5e9;
+  }
+
+  .theme-chip:hover {
+    background: #1e2a44;
+    border-color: #38bdf8;
+  }
+
+  .glass-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .glass-slider label {
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  input[type="range"] {
+    width: 220px;
+    background: #1e293b;
+    height: 4px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+  }
+
+  input[type="range"]:focus {
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #38bdf8;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px #38bdf8;
+  }
+
+  .powered {
+    margin-top: 80px;
+    font-size: 12px;
+    color: #4b5563;
+    padding-top: 20px;
+    border-top: 1px solid #1e2a44;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .powered span {
+    color: #38bdf8;
+    font-weight: 600;
+  }
+
+  /* responsive */
+  @media (max-width: 720px) {
+    .container {
+      padding: 24px 20px;
+    }
+    h1 {
+      font-size: 42px;
+    }
+    .topbar {
+      padding: 14px 20px;
+    }
+    .button {
+      padding: 10px 22px;
+    }
+  }
+
+  @keyframes fadeSlide {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-up {
+    animation: fadeSlide 0.5s ease forwards;
+  }
 </style>
-
 </head>
-
 <body>
+
 <div class="topbar">
-
-<div>
-<h2>🔷Tradepilot</h2>
+  <div class="logo">
+    <span class="logo-icon">🔷</span>
+    <h2>Tradepilot</h2>
+  </div>
+  <div class="theme-toggle" id="globalThemeToggleBtn">
+    <span>🎨</span> <span>Customize</span>
+  </div>
 </div>
-
-
-</div>
-
 
 <div class="container">
+  <div class="badge-glow">🤖 AI-Powered Deriv Trading Signals</div>
+  <h1>Outsmart The Market with <span class="highlight">AI</span></h1>
+  <p class="subtitle">
+    Tradepilot AI — precision execution, multi-contract intelligence, and real-time confidence analytics.
+  </p>
 
-<div class="badge">AI-Powered Deriv Trading Signals</div>
-
-<h1>Outsmart The Market with <span class="highlight">AI</span></h1>
-
-<p class="subtitle">
-Tradepilot AI — guiding your moves with precision and executing multiple contracts at once.
-</p>
-
-<!-- ========================= -->
-<!-- LOGIN METHODS -->
-<!-- ========================= -->
-
-<div class="section-title">Choose how to connect your Deriv account</div>
-<br />
-
-<!-- OAuth -->
-<div>
-    <button class="button" onclick="connectOAuth()">
-        🔵 Connect via Deriv OAuth (Recommended)
+  <!-- connection zone with improved styling -->
+  <div class="connect-panel">
+    <div class="section-title">
+      <span>⚡</span> Connect Deriv Account
+    </div>
+    
+    <!-- OAuth -->
+    <button class="button" id="oauthBtn" onclick="connectOAuth()">
+      🔵 Connect via Deriv OAuth (Recommended)
     </button>
-</div>
+    
+    <div class="or-divider">
+      <hr> <span>secure alternative</span> <hr>
+    </div>
 
-<!-- OR -->
-<p style="color:#64748b;margin:15px 0;">OR</p>
+    <div class="token-box">
+      <div class="password-wrapper">
+        <input type="password" id="apiToken" placeholder="Paste your Deriv API token (read/trade)">
+        <button class="toggle-eye" onclick="toggleTokenVisibility()" aria-label="Show/hide token">👁️</button>
+      </div>
+      <button class="button secondary-btn" id="connectBtn" onclick="connectToken()">
+        🔐 Connect with API Token
+      </button>
+      <div class="account-signup">
+        🚀 New to Deriv trading?
+        <a href="https://deriv.com/?utm_source=tradepilot" target="_blank" rel="noreferrer" class="signup-link">
+          open a free Deriv account →
+        </a>
+      </div>
+    </div>
+  </div>
 
-<!-- TOKEN -->
-<div class="token-box">
+  <!-- dynamic info cards -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>All Trades Engine</h3>
+      <p>Executes all types of trades with smart order flow and risk-aware logic.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h3>High-Spec Analysis</h3>
+      <p>Real-time market analysis, confidence scoring & AI-driven entry points.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h3>Secure Connection Layer</h3>
+      <p>OAuth + token authentication with encrypted infrastructure.</p>
+    </div>
+  </div>
 
-    <div class="password-wrapper">
-  <input type="password" id="apiToken" placeholder="Paste your Deriv API Token">
+  <!-- CUSTOMIZATION & UI ENHANCEMENTS PANEL -->
+  <div class="customization-row" id="customizePanel">
+    <div class="custom-title">
+      <span>✨</span> Live UI Customization <span>✨</span>
+    </div>
+    <div class="theme-options" id="themePalette">
+      <div class="theme-chip" data-theme="cosmic">🌌 Cosmic Blue</div>
+      <div class="theme-chip" data-theme="aurora">🌿 Aurora Green</div>
+      <div class="theme-chip" data-theme="ember">🔥 Ember Glow</div>
+      <div class="theme-chip" data-theme="royal">💜 Royal Violet</div>
+    </div>
+    <div class="glass-slider">
+      <span>🔘 Glassmorphism intensity</span>
+      <input type="range" id="glassIntensity" min="0.4" max="0.95" step="0.01" value="0.65">
+      <span id="intensityValue" style="min-width: 40px;">0.65</span>
+    </div>
+    <div class="glass-slider" style="margin-top: 16px;">
+      <span>🌀 Border glow</span>
+      <input type="range" id="borderGlow" min="0" max="1" step="0.05" value="0.25">
+    </div>
+    <p style="font-size:12px; color:#6b7280; margin-top: 20px;">* Customization saved locally & updates in real-time</p>
+  </div>
 
-  <span class="toggle-eye" onclick="toggleToken()">
-    👁️
-  </span>
-</div>
-
-    <br>
-
-    <button class="button secondary-btn" id="connectBtn" onclick="connectToken()">
-    🔐 Connect with API Token
-</button>
-
-    <br>
-    <br>
-
-    <!-- Signup Link -->
-<div class="account-signup">
-  New to deriv trading?
-  <a
-    href="https://deriv.com/?utm_source=chatgpt.com"
-    target="_blank"
-    rel="noreferrer"
-    class="signup-link"
-  >
-    open a free Deriv account
-  </a>
-</div>
-
-
-</div>
-
-<!-- ========================= -->
-<!-- INFO CARDS -->
-<!-- ========================= -->
-
-<div class="cards">
-
-<div class="card">
-<h3>All Trades Engine</h3>
-<p>Executes all types of trades with smart controls and reliable order flow.</p>
-</div>
-
-<div class="card">
-<h3>High-Spec Analysis</h3>
-<p>Real-time market analysis and confidence view to help pick better entries.</p>
-</div>
-
-<div class="card">
-<h3>Secure Connection Layer</h3>
-<p>Supports OAuth authentication and API token integration for flexibility.</p>
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- POWERED BY DERIV -->
-<!-- ========================= -->
-
-<div class="powered">
-    Powered by <span>Deriv</span> — All trading actions are executed on Deriv’s official infrastructure. Trade responsibly.
-</div>
-
+  <div class="powered">
+    Powered by <span>Deriv</span> — All trading actions executed on Deriv’s official infrastructure. Trade responsibly.
+  </div>
 </div>
 
 <script>
-
-/* OAuth FLOW (placeholder for real integration) */
-function connectOAuth(){
-    alert("Redirecting to Deriv OAuth login...");
-    
-    // Later you will replace this with real OAuth redirect:
-    // window.location.href = "https://oauth.deriv.com/authorize?..."
-
-    setTimeout(()=>{
-        window.location.href = "derivdash.html";
-    },1000);
-}
-
-/* TOKEN FLOW */
-function connectToken(){
-
-    const btn = document.getElementById("connectBtn");
-    const token = document.getElementById("apiToken").value;
-
-    if(!token){
-        alert("Please paste your Deriv API token");
-        return;
+  // ---------- UI CUSTOMIZATION ENGINE (persistent + dynamic) ----------
+  function applyTheme(themeName) {
+    const root = document.documentElement;
+    if (themeName === 'cosmic') {
+      document.body.style.background = 'radial-gradient(ellipse at 30% 10%, #0a1c2f, #020617)';
+      document.querySelector('.topbar').style.borderBottomColor = 'rgba(56, 189, 248, 0.3)';
+      document.querySelectorAll('.card, .connect-panel, .customization-row').forEach(el => {
+        el.style.borderColor = `rgba(56, 189, 248, ${getComputedStyle(document.documentElement).getPropertyValue('--glow-alpha') || '0.2'})`;
+      });
+    } 
+    else if (themeName === 'aurora') {
+      document.body.style.background = 'radial-gradient(ellipse at 70% 20%, #0b2b1f, #03100c)';
+      document.querySelector('.topbar').style.borderBottomColor = 'rgba(74, 222, 128, 0.3)';
+      document.querySelectorAll('.card, .connect-panel, .customization-row').forEach(el => {
+        el.style.borderColor = `rgba(74, 222, 128, ${getComputedStyle(document.documentElement).getPropertyValue('--glow-alpha') || '0.2'})`;
+      });
+      // update gradient accents
+      const btns = document.querySelectorAll('.button:not(.secondary-btn)');
+      btns.forEach(btn => {
+        btn.style.background = 'linear-gradient(105deg, #10b981, #059669)';
+      });
     }
+    else if (themeName === 'ember') {
+      document.body.style.background = 'radial-gradient(ellipse at 40% 50%, #2c1a0e, #110600)';
+      document.querySelector('.topbar').style.borderBottomColor = 'rgba(251, 146, 60, 0.4)';
+      document.querySelectorAll('.card, .connect-panel, .customization-row').forEach(el => {
+        el.style.borderColor = `rgba(251, 146, 60, ${getComputedStyle(document.documentElement).getPropertyValue('--glow-alpha') || '0.25'})`;
+      });
+      const btns = document.querySelectorAll('.button:not(.secondary-btn)');
+      btns.forEach(btn => {
+        btn.style.background = 'linear-gradient(105deg, #f97316, #ea580c)';
+      });
+    }
+    else if (themeName === 'royal') {
+      document.body.style.background = 'radial-gradient(ellipse at 20% 80%, #1e1b4b, #020617)';
+      document.querySelector('.topbar').style.borderBottomColor = 'rgba(167, 139, 250, 0.4)';
+      document.querySelectorAll('.card, .connect-panel, .customization-row').forEach(el => {
+        el.style.borderColor = `rgba(167, 139, 250, ${getComputedStyle(document.documentElement).getPropertyValue('--glow-alpha') || '0.2'})`;
+      });
+      const btns = document.querySelectorAll('.button:not(.secondary-btn)');
+      btns.forEach(btn => {
+        btn.style.background = 'linear-gradient(105deg, #8b5cf6, #6d28d9)';
+      });
+    }
+    
+    // restore default button style if theme changes and gradient override needed
+    if (themeName !== 'aurora' && themeName !== 'ember' && themeName !== 'royal') {
+      const defaultBtns = document.querySelectorAll('.button:not(.secondary-btn)');
+      defaultBtns.forEach(btn => {
+        btn.style.background = 'linear-gradient(105deg, #0ea5e9, #3b82f6)';
+      });
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('tradepilot_theme', themeName);
+    // update active chip class
+    document.querySelectorAll('.theme-chip').forEach(chip => {
+      if (chip.getAttribute('data-theme') === themeName) chip.classList.add('active-theme');
+      else chip.classList.remove('active-theme');
+    });
+  }
 
-    // 🔥 LOADING STATE
-    btn.innerText = "Connecting...";
+  function updateGlassIntensity(value) {
+    const alpha = parseFloat(value);
+    document.getElementById('intensityValue').innerText = alpha.toFixed(2);
+    const panels = document.querySelectorAll('.connect-panel, .customization-row, .card');
+    panels.forEach(panel => {
+      panel.style.backgroundColor = `rgba(15, 23, 42, ${alpha * 0.9})`;
+      if(panel.classList.contains('card')) {
+        panel.style.backgroundColor = `rgba(11, 22, 38, ${alpha})`;
+      }
+    });
+    localStorage.setItem('glass_intensity', alpha);
+  }
+
+  function updateBorderGlow(value) {
+    const glowLevel = parseFloat(value);
+    const borderGlowVal = `rgba(56, 189, 248, ${glowLevel * 0.6})`;
+    document.documentElement.style.setProperty('--glow-alpha', glowLevel);
+    const elements = document.querySelectorAll('.card, .connect-panel, .customization-row');
+    elements.forEach(el => {
+      const currentBorder = el.style.borderColor;
+      if(currentBorder && currentBorder.includes('rgba')) {
+        // we preserve the color but update alpha approximately
+        let colorMatch = currentBorder.match(/rgba?\((\d+), (\d+), (\d+)/);
+        if(colorMatch) {
+          let r = colorMatch[1], g = colorMatch[2], b = colorMatch[3];
+          el.style.borderColor = `rgba(${r}, ${g}, ${b}, ${glowLevel * 0.7})`;
+        } else {
+          el.style.borderColor = `rgba(56, 189, 248, ${glowLevel * 0.6})`;
+        }
+      } else {
+        el.style.borderColor = `rgba(56, 189, 248, ${glowLevel * 0.6})`;
+      }
+    });
+    localStorage.setItem('border_glow', glowLevel);
+  }
+
+  // load saved customizations
+  function loadCustomizations() {
+    const savedTheme = localStorage.getItem('tradepilot_theme');
+    if (savedTheme && ['cosmic', 'aurora', 'ember', 'royal'].includes(savedTheme)) {
+      applyTheme(savedTheme);
+    } else {
+      applyTheme('cosmic');
+    }
+    
+    const savedIntensity = localStorage.getItem('glass_intensity');
+    if (savedIntensity) {
+      const intensity = parseFloat(savedIntensity);
+      document.getElementById('glassIntensity').value = intensity;
+      updateGlassIntensity(intensity);
+    } else {
+      updateGlassIntensity(0.65);
+    }
+    
+    const savedGlow = localStorage.getItem('border_glow');
+    if (savedGlow) {
+      const glow = parseFloat(savedGlow);
+      document.getElementById('borderGlow').value = glow;
+      updateBorderGlow(glow);
+    } else {
+      updateBorderGlow(0.25);
+    }
+  }
+  
+  // event binding for theme chips
+  function bindCustomEvents() {
+    document.querySelectorAll('.theme-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        const theme = chip.getAttribute('data-theme');
+        applyTheme(theme);
+        // re-apply glass and border values after theme change to keep consistency
+        const intensityVal = document.getElementById('glassIntensity').value;
+        updateGlassIntensity(intensityVal);
+        const glowVal = document.getElementById('borderGlow').value;
+        updateBorderGlow(glowVal);
+      });
+    });
+    const glassSlider = document.getElementById('glassIntensity');
+    glassSlider.addEventListener('input', (e) => updateGlassIntensity(e.target.value));
+    const borderSlider = document.getElementById('borderGlow');
+    borderSlider.addEventListener('input', (e) => updateBorderGlow(e.target.value));
+  }
+
+  // toggle token visibility
+  window.toggleTokenVisibility = function() {
+    const tokenInput = document.getElementById('apiToken');
+    if (tokenInput.type === 'password') {
+      tokenInput.type = 'text';
+    } else {
+      tokenInput.type = 'password';
+    }
+  };
+  
+  // OAuth + token logic (upgraded UX feedback)
+  window.connectOAuth = function() {
+    const btn = document.getElementById('oauthBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '🔄 Redirecting to Deriv...';
     btn.disabled = true;
-
+    setTimeout(() => {
+      alert("🔐 Deriv OAuth integration ready — redirect to secure authorization endpoint.");
+      // Simulate dashboard redirect (replace with actual Deriv OAuth URL)
+      localStorage.setItem('demo_oauth', 'connected');
+      window.location.href = "derivdash.html";
+    }, 800);
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 1500);
+  };
+  
+  window.connectToken = function() {
+    const btn = document.getElementById('connectBtn');
+    const token = document.getElementById('apiToken').value.trim();
+    if (!token) {
+      alert("⚠️ Please paste your Deriv API token");
+      return;
+    }
+    btn.innerText = "🔄 Verifying token...";
+    btn.disabled = true;
+    
+    // enhanced fetch with timeout and visual feedback
     fetch("http://192.168.1.106:5000/api/connect", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            token: token   // ✅ CORRECT
-        })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: token })
     })
     .then(res => res.json())
     .then(data => {
-
-        console.log("RESPONSE:", data);
-
-        if(data.status !== "success"){
-            alert(data.message);
-
-            btn.innerText = "🔐 Connect with API Token";
-            btn.disabled = false;
-            return;
-        }
-
-        // ✅ SAVE TOKEN
-        localStorage.setItem("deriv_token", token);
-
-        // ✅ SAVE USER
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // ✅ GO TO DASHBOARD
-        window.location.href = "derivdash.html";
-    })
-    .catch(err => {
-
-        console.log("ERROR:", err);
-
-        alert("Connection failed");
-
+      if (data.status !== "success") {
+        alert(`❌ Connection failed: ${data.message || 'Invalid token'}`);
         btn.innerText = "🔐 Connect with API Token";
         btn.disabled = false;
+        return;
+      }
+      localStorage.setItem("deriv_token", token);
+      localStorage.setItem("user", JSON.stringify(data.user || { name: "Trader" }));
+      window.location.href = "derivdash.html";
+    })
+    .catch(err => {
+      console.error("Connection error", err);
+      alert("🌐 Connection error — server unreachable. Make sure backend is running.");
+      btn.innerText = "🔐 Connect with API Token";
+      btn.disabled = false;
     });
-}
-
+  };
+  
+  // Also manual theme toggle button
+  document.getElementById('globalThemeToggleBtn')?.addEventListener('click', () => {
+    document.getElementById('customizePanel')?.scrollIntoView({ behavior: 'smooth' });
+  });
+  
+  // on load
+  window.addEventListener('DOMContentLoaded', () => {
+    loadCustomizations();
+    bindCustomEvents();
+    // extra animation fade class
+    document.querySelectorAll('.card, .connect-panel').forEach(el => el.classList.add('fade-up'));
+  });
 </script>
-
 </body>
 </html>
