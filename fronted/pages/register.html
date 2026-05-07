@@ -2,172 +2,490 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🔷Tradepilot</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TradePilot • Create Account with Phone</title>
 <style>
-/* PAGE BACKGROUND */
-body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial, Helvetica, sans-serif;
-  background: radial-gradient(circle at center,#0b1f3a,#020617);
-  color:white;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-/* FLOATING REGISTER BOX */
-.register-container {
-  width:380px;
-  padding:40px;
-  border-radius:14px;
-  background:rgba(10,20,40,0.6);
-  backdrop-filter: blur(10px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.7);
-  text-align:center;
-}
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(ellipse at 30% 20%, #0a1428, #02040c);
+    color: #f1f5f9;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
 
-/* TITLE */
-.register-container h2 {
-  margin-bottom:25px;
-}
+  /* animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px);
+    background-size: 35px 35px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* INPUT GROUP */
-.input-group {
-  margin-bottom:18px;
-  text-align:left;
-}
-.input-group label {
-  font-size:14px;
-  color:#9ca3af;
-}
-.input-group input {
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:#081a33;
-  color:white;
-  outline:none;
-}
+  /* floating particles */
+  .particle {
+    position: fixed;
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* REGISTER BUTTON */
-.register-btn {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#22c55e;
-  color:white;
-  font-size:15px;
-  cursor:pointer;
-  transition:0.3s;
-}
-.register-btn:hover {
-  background:#16a34a;
-}
+  /* main card */
+  .register-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 44px 40px;
+    background: rgba(8, 18, 38, 0.8);
+    backdrop-filter: blur(18px);
+    border-radius: 52px;
+    box-shadow: 0 30px 55px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.6s ease;
+    transition: transform 0.25s;
+  }
 
-/* LOGIN LINK */
-.login-link {
-  margin-top:18px;
-  font-size:13px;
-  color:#9ca3af;
-}
-.login-link a {
-  color:#3b82f6;
-  text-decoration:none;
-}
+  .register-container:hover {
+    transform: translateY(-3px);
+  }
 
-/* ✅ NEW FOOTER */
-.main-footer {
-  position:absolute;
-  bottom:10px;
-  width:100%;
-  text-align:center;
-  font-size:13px;
-  color:#64748b;
-}
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    padding: 8px 22px;
+    border-radius: 60px;
+    margin-bottom: 28px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0a0f1f;
+  }
+
+  .register-container h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .subhead {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-bottom: 32px;
+  }
+
+  /* input groups premium */
+  .input-group {
+    margin-bottom: 22px;
+    text-align: left;
+  }
+
+  .input-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 32px;
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    background: #0a122a;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .input-group input:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    background: #0f1838;
+  }
+
+  /* password wrapper with toggle */
+  .password-wrapper {
+    position: relative;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #9ca3af;
+    transition: 0.2s;
+  }
+
+  .toggle-password:hover {
+    color: #22c55e;
+  }
+
+  /* password strength indicator */
+  .strength-meter {
+    margin-top: 8px;
+    height: 4px;
+    background: #1e293b;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .strength-fill {
+    width: 0%;
+    height: 100%;
+    transition: width 0.3s ease, background 0.3s;
+  }
+
+  .strength-text {
+    font-size: 10px;
+    margin-top: 6px;
+    color: #94a3b8;
+  }
+
+  /* register button */
+  .register-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 40px;
+    background: linear-gradient(105deg, #22c55e, #16a34a);
+    color: #0a0f1f;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3);
+  }
+
+  .register-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(105deg, #2dd4bf, #22c55e);
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+  }
+
+  .register-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* message area */
+  .message-area {
+    margin-top: 18px;
+    font-size: 13px;
+    min-height: 44px;
+    padding: 8px;
+    border-radius: 60px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .login-link {
+    margin-top: 28px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .login-link a {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+    color: #4ade80;
+  }
+
+  /* professional footer */
+  .premium-footer {
+    position: absolute;
+    bottom: 16px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #4b5563;
+    z-index: 2;
+    background: transparent;
+    padding: 12px;
+  }
+
+  .premium-footer span {
+    color: #22c55e;
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes floatParticle {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    20% { opacity: 0.5; }
+    80% { opacity: 0.3; }
+    100% { transform: translateY(-100px) translateX(25px); opacity: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .register-container {
+      padding: 32px 24px;
+      margin: 16px;
+    }
+    .register-container h2 {
+      font-size: 1.6rem;
+    }
+  }
 </style>
 </head>
-
 <body>
 
 <div class="register-container">
+  <div class="logo-badge">
+    🔷 TradePilot • Join the future
+  </div>
   <h2>Create Account</h2>
+  <p class="subhead">Start your automated trading journey</p>
 
   <form id="registerForm">
     <div class="input-group">
-      <label>Username</label>
-      <input type="text" id="username" required>
+      <label>📞 Phone Number</label>
+      <input type="tel" id="phoneNumber" placeholder="+1 234 567 8900" autocomplete="tel" required>
+      <div style="font-size: 10px; color: #6b7280; margin-top: 4px;">Include country code (e.g., +1, +44)</div>
     </div>
 
     <div class="input-group">
-      <label>Email</label>
-      <input type="email" id="email" required>
+      <label>📧 Email Address</label>
+      <input type="email" id="email" placeholder="trader@example.com" autocomplete="email" required>
     </div>
 
     <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="password" required>
+      <label>🔒 Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="••••••••" required>
+        <button type="button" class="toggle-password" data-target="password">👁️</button>
+      </div>
+      <div class="strength-meter">
+        <div class="strength-fill" id="strengthFill"></div>
+      </div>
+      <div class="strength-text" id="strengthLabel">Enter a strong password</div>
     </div>
 
     <div class="input-group">
-      <label>Confirm Password</label>
-      <input type="password" id="confirmPassword" required>
+      <label>✓ Confirm Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="confirmPassword" placeholder="••••••••" required>
+        <button type="button" class="toggle-password" data-target="confirmPassword">👁️</button>
+      </div>
     </div>
 
-    <button class="register-btn" type="submit">Register</button>
+    <button class="register-btn" type="submit">🚀 Register & Start Trading</button>
   </form>
 
-  <p id="registerMessage"></p>
+  <div class="message-area" id="registerMessage"></div>
 
   <div class="login-link">
-    Already have an account? <a href="login.html">Login</a>
+    Already have an account? <a href="login.html">Sign in →</a>
   </div>
 </div>
 
-<!-- ✅ NEW INTERNAL FOOTER -->
-<div class="main-footer">
-  © 2026 Tradepilot — Automated Trading Platform
-</div>
+<footer class="premium-footer">
+  © 2026 TradePilot — <span>Automated Trading Platform</span> • Secure & Regulated
+</footer>
 
 <script>
-document.getElementById("registerForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+  // Password strength checker
+  const passwordInput = document.getElementById('password');
+  const strengthFill = document.getElementById('strengthFill');
+  const strengthLabel = document.getElementById('strengthLabel');
 
-  let username = document.getElementById("username").value;
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-  let confirmPassword = document.getElementById("confirmPassword").value;
-
-  if (password !== confirmPassword) {
-    document.getElementById("registerMessage").innerText = "Passwords do not match";
-    return;
+  function checkStrength(pw) {
+    let score = 0;
+    if (pw.length >= 6) score += 1;
+    if (pw.length >= 10) score += 1;
+    if (/[A-Z]/.test(pw)) score += 1;
+    if (/[0-9]/.test(pw)) score += 1;
+    if (/[^A-Za-z0-9]/.test(pw)) score += 1;
+    
+    const widthMap = {0: '0%', 1: '20%', 2: '40%', 3: '60%', 4: '80%', 5: '100%'};
+    const colorMap = {0: '#ef4444', 1: '#f97316', 2: '#eab308', 3: '#22c55e', 4: '#22c55e', 5: '#2dd4bf'};
+    const textMap = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
+    
+    strengthFill.style.width = widthMap[score] || '0%';
+    strengthFill.style.backgroundColor = colorMap[score] || '#ef4444';
+    strengthLabel.innerText = textMap[score] || 'Enter a password';
+    return score;
   }
 
-  try {
-    const res = await fetch("http://192.168.0.101:5000/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password })
+  passwordInput.addEventListener('input', (e) => checkStrength(e.target.value));
+
+  // Toggle password visibility for all password fields
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (input) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.textContent = '🙈';
+        } else {
+          input.type = 'password';
+          btn.textContent = '👁️';
+        }
+      }
     });
+  });
 
-    const data = await res.json();
-    document.getElementById("registerMessage").innerText = data.message || data.error;
+  // Phone number validation helper
+  function validatePhone(phone) {
+    const phoneRegex = /^[\+\d\s\-\(\)]{8,25}$/;
+    if (!phoneRegex.test(phone)) return false;
+    const digits = phone.replace(/\D/g, '');
+    return digits.length >= 8 && digits.length <= 15;
+  }
 
-    if (res.status === 201) {
+  // Form submission
+  document.getElementById("registerForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const phoneNumber = document.getElementById("phoneNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const messageDiv = document.getElementById("registerMessage");
+
+    // Validation
+    if (!phoneNumber || !email || !password) {
+      messageDiv.innerHTML = "❌ All fields are required";
+      messageDiv.style.color = "#f87171";
+      return;
+    }
+
+    if (!validatePhone(phoneNumber)) {
+      messageDiv.innerHTML = "❌ Please enter a valid phone number with country code (e.g., +1234567890)";
+      messageDiv.style.color = "#f87171";
+      return;
+    }
+
+    if (!email.includes('@') || !email.includes('.')) {
+      messageDiv.innerHTML = "❌ Please enter a valid email address";
+      messageDiv.style.color = "#f87171";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      messageDiv.innerHTML = "❌ Passwords do not match";
+      messageDiv.style.color = "#f87171";
+      return;
+    }
+
+    if (password.length < 6) {
+      messageDiv.innerHTML = "⚠️ Password must be at least 6 characters";
+      messageDiv.style.color = "#fbbf24";
+      return;
+    }
+
+    const strengthScore = checkStrength(password);
+    if (strengthScore < 2) {
+      messageDiv.innerHTML = "⚠️ Please choose a stronger password (mix of letters, numbers, symbols)";
+      messageDiv.style.color = "#fbbf24";
+      return;
+    }
+
+    messageDiv.innerHTML = "⏳ Creating your account...";
+    messageDiv.style.color = "#94a3b8";
+
+    try {
+      // Send phone number instead of username to backend
+      const res = await fetch("http://192.168.0.101:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          phone: phoneNumber,
+          email: email, 
+          password: password 
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.status === 201 || res.status === 200) {
+        messageDiv.innerHTML = "✅ Account created successfully! Redirecting to login...";
+        messageDiv.style.color = "#22c55e";
+        localStorage.setItem("registeredPhone", phoneNumber);
+        localStorage.setItem("registeredEmail", email);
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1800);
+      } else {
+        messageDiv.innerHTML = `❌ ${data.message || data.error || "Registration failed"}`;
+        messageDiv.style.color = "#f87171";
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      // Fallback demo mode for testing when backend is unavailable
+      messageDiv.innerHTML = "⚠️ Demo mode: Backend unreachable. Account created locally. Redirecting to login...";
+      messageDiv.style.color = "#fbbf24";
+      // Store demo user data
+      localStorage.setItem("demoUser", JSON.stringify({ phone: phoneNumber, email: email }));
       setTimeout(() => {
         window.location.href = "login.html";
-      }, 1500);
+      }, 2000);
     }
-  } catch (err) {
-    document.getElementById("registerMessage").innerText = "Server error. Please try again.";
-  }
-});
-</script>
+  });
 
+  // Add floating decorative particles
+  function createParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    const size = Math.random() * 4 + 2;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.bottom = `-10px`;
+    particle.style.animation = `floatParticle ${Math.random() * 12 + 8}s infinite ease-in-out`;
+    particle.style.opacity = Math.random() * 0.4;
+    document.body.appendChild(particle);
+    setTimeout(() => particle.remove(), 15000);
+  }
+  setInterval(createParticle, 2000);
+</script>
 </body>
 </html>

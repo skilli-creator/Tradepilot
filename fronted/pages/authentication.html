@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TradePilot • Verify Email & Phone</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(ellipse at 30% 20%, #0a1428, #02040c);
+    color: #f1f5f9;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 300px; height: 300px; background: #22c55e; top: -100px; left: -100px; }
+  .orb-2 { width: 350px; height: 350px; background: #3b82f6; bottom: -120px; right: -80px; }
+
+  .verify-container {
+    width: 100%;
+    max-width: 560px;
+    padding: 40px 36px;
+    background: rgba(8, 18, 38, 0.88);
+    backdrop-filter: blur(20px);
+    border-radius: 56px;
+    box-shadow: 0 30px 55px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.25);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.6s ease;
+    transition: transform 0.25s;
+  }
+
+  .verify-container:hover {
+    transform: translateY(-3px);
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    padding: 8px 22px;
+    border-radius: 60px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0a0f1f;
+  }
+
+  .verify-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .subhead {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-bottom: 20px;
+  }
+
+  /* verification sections */
+  .verify-section {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 32px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .section-icon {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+  }
+
+  .destination-info {
+    background: rgba(34, 197, 94, 0.1);
+    padding: 8px 12px;
+    border-radius: 40px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    word-break: break-all;
+  }
+
+  .destination-info span {
+    color: #22c55e;
+    font-weight: 600;
+  }
+
+  .code-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 16px 0 12px;
+  }
+
+  .code-digit {
+    width: 52px;
+    height: 60px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    background: #0a122a;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    color: white;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: monospace;
+  }
+
+  .code-digit:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    background: #0f1838;
+  }
+
+  .code-digit.error {
+    border-color: #ef4444;
+    animation: shake 0.3s ease-in-out;
+  }
+
+  .timer-section {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 8px 0;
+  }
+
+  .timer {
+    color: #facc15;
+    font-weight: 600;
+  }
+
+  .resend-link {
+    color: #3b82f6;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: 0.2s;
+  }
+
+  .resend-link:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+  }
+
+  .resend-link.disabled {
+    color: #4b5563;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .status-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  .status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+  }
+
+  .status-verified {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+  }
+
+  .verify-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 44px;
+    background: linear-gradient(105deg, #22c55e, #16a34a);
+    color: #0a0f1f;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3);
+  }
+
+  .verify-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: linear-gradient(105deg, #2dd4bf, #22c55e);
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+  }
+
+  .verify-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .message-area {
+    margin-top: 20px;
+    font-size: 13px;
+    min-height: 44px;
+    padding: 8px;
+    border-radius: 60px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .back-link {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .back-link a {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .footer-note {
+    position: absolute;
+    bottom: 16px;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    color: #4b5563;
+    z-index: 2;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  @media (max-width: 600px) {
+    .verify-container { padding: 28px 20px; margin: 16px; }
+    .code-digit { width: 44px; height: 52px; font-size: 22px; }
+    .code-inputs { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="verify-container">
+  <div class="logo-badge">
+    🔷 TradePilot • Secure Verification
+  </div>
+  <h2>Verify Your Identity</h2>
+  <p class="subhead">We've sent verification codes to both your email and phone</p>
+
+  <!-- EMAIL VERIFICATION SECTION -->
+  <div class="verify-section" id="emailSection">
+    <div class="section-header">
+      <span class="section-icon">📧</span>
+      <span class="section-title">Email Verification</span>
+    </div>
+    <div class="destination-info" id="emailInfo">
+      Loading email...
+    </div>
+    <div class="code-inputs" id="emailCodeInputs">
+      <input type="text" maxlength="1" class="code-digit" id="email0" autofocus>
+      <input type="text" maxlength="1" class="code-digit" id="email1">
+      <input type="text" maxlength="1" class="code-digit" id="email2">
+      <input type="text" maxlength="1" class="code-digit" id="email3">
+      <input type="text" maxlength="1" class="code-digit" id="email4">
+      <input type="text" maxlength="1" class="code-digit" id="email5">
+    </div>
+    <div class="timer-section">
+      <span>⏱️ Code expires in </span>
+      <span class="timer" id="emailTimer">02:00</span>
+      <span> | </span>
+      <span class="resend-link" id="resendEmail">Resend code</span>
+    </div>
+    <div id="emailStatus" class="status-badge status-pending">⏳ Pending verification</div>
+  </div>
+
+  <!-- PHONE VERIFICATION SECTION -->
+  <div class="verify-section" id="phoneSection">
+    <div class="section-header">
+      <span class="section-icon">📞</span>
+      <span class="section-title">Phone Verification</span>
+    </div>
+    <div class="destination-info" id="phoneInfo">
+      Loading phone number...
+    </div>
+    <div class="code-inputs" id="phoneCodeInputs">
+      <input type="text" maxlength="1" class="code-digit" id="phone0">
+      <input type="text" maxlength="1" class="code-digit" id="phone1">
+      <input type="text" maxlength="1" class="code-digit" id="phone2">
+      <input type="text" maxlength="1" class="code-digit" id="phone3">
+      <input type="text" maxlength="1" class="code-digit" id="phone4">
+      <input type="text" maxlength="1" class="code-digit" id="phone5">
+    </div>
+    <div class="timer-section">
+      <span>⏱️ Code expires in </span>
+      <span class="timer" id="phoneTimer">02:00</span>
+      <span> | </span>
+      <span class="resend-link" id="resendPhone">Resend code</span>
+    </div>
+    <div id="phoneStatus" class="status-badge status-pending">⏳ Pending verification</div>
+  </div>
+
+  <button class="verify-btn" id="completeBtn" disabled>✓ Complete Verification</button>
+
+  <div class="message-area" id="messageArea"></div>
+
+  <div class="back-link">
+    <a href="login.html">← Back to Login</a>
+  </div>
+</div>
+
+<footer class="footer-note">
+  © 2026 TradePilot — Two-factor verification required for account security
+</footer>
+
+<script>
+  // Get user contact info from localStorage (set during signup)
+  let userEmail = localStorage.getItem('registeredEmail') || 'demo@tradepilot.com';
+  let userPhone = localStorage.getItem('registeredPhone') || '+1234567890';
+  
+  // Mask display values
+  function maskEmail(email) {
+    if (!email || !email.includes('@')) return email;
+    const [local, domain] = email.split('@');
+    const maskedLocal = local.length <= 3 ? local : local.slice(0, 2) + '****' + local.slice(-1);
+    return `${maskedLocal}@${domain}`;
+  }
+  
+  function maskPhone(phone) {
+    if (!phone) return 'your phone';
+    if (phone.length <= 6) return phone;
+    return phone.slice(0, 3) + '****' + phone.slice(-3);
+  }
+  
+  document.getElementById('emailInfo').innerHTML = `📧 Sent to <span>${maskEmail(userEmail)}</span>`;
+  document.getElementById('phoneInfo').innerHTML = `📞 Sent to <span>${maskPhone(userPhone)}</span>`;
+  
+  // Store original values for verification
+  let emailCode = generateRandomCode();
+  let phoneCode = generateRandomCode();
+  
+  let emailVerified = false;
+  let phoneVerified = false;
+  
+  let emailTimerInterval = null;
+  let phoneTimerInterval = null;
+  let emailTimeLeft = 120;
+  let phoneTimeLeft = 120;
+  let emailCanResend = false;
+  let phoneCanResend = false;
+  
+  function generateRandomCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+  
+  // Timer functions
+  function startEmailTimer() {
+    if (emailTimerInterval) clearInterval(emailTimerInterval);
+    emailTimeLeft = 120;
+    emailCanResend = false;
+    document.getElementById('resendEmail').classList.add('disabled');
+    updateEmailTimerDisplay();
+    emailTimerInterval = setInterval(() => {
+      if (emailTimeLeft > 0) {
+        emailTimeLeft--;
+        updateEmailTimerDisplay();
+      } else {
+        clearInterval(emailTimerInterval);
+        emailCanResend = true;
+        document.getElementById('resendEmail').classList.remove('disabled');
+      }
+    }, 1000);
+  }
+  
+  function startPhoneTimer() {
+    if (phoneTimerInterval) clearInterval(phoneTimerInterval);
+    phoneTimeLeft = 120;
+    phoneCanResend = false;
+    document.getElementById('resendPhone').classList.add('disabled');
+    updatePhoneTimerDisplay();
+    phoneTimerInterval = setInterval(() => {
+      if (phoneTimeLeft > 0) {
+        phoneTimeLeft--;
+        updatePhoneTimerDisplay();
+      } else {
+        clearInterval(phoneTimerInterval);
+        phoneCanResend = true;
+        document.getElementById('resendPhone').classList.remove('disabled');
+      }
+    }, 1000);
+  }
+  
+  function updateEmailTimerDisplay() {
+    const minutes = Math.floor(emailTimeLeft / 60);
+    const seconds = emailTimeLeft % 60;
+    document.getElementById('emailTimer').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (emailTimeLeft <= 0) {
+      document.getElementById('emailTimer').innerHTML = 'Expired';
+    }
+  }
+  
+  function updatePhoneTimerDisplay() {
+    const minutes = Math.floor(phoneTimeLeft / 60);
+    const seconds = phoneTimeLeft % 60;
+    document.getElementById('phoneTimer').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (phoneTimeLeft <= 0) {
+      document.getElementById('phoneTimer').innerHTML = 'Expired';
+    }
+  }
+  
+  // Send verification codes (simulated)
+  function sendEmailCode() {
+    emailCode = generateRandomCode();
+    console.log(`[DEMO] Email verification code: ${emailCode} sent to ${userEmail}`);
+    showMessage(`📨 Verification code sent to ${maskEmail(userEmail)}`, '#22c55e');
+    startEmailTimer();
+    clearEmailInputs();
+  }
+  
+  function sendPhoneCode() {
+    phoneCode = generateRandomCode();
+    console.log(`[DEMO] Phone verification code: ${phoneCode} sent to ${userPhone}`);
+    showMessage(`📨 Verification code sent to ${maskPhone(userPhone)}`, '#22c55e');
+    startPhoneTimer();
+    clearPhoneInputs();
+  }
+  
+  function clearEmailInputs() {
+    for (let i = 0; i < 6; i++) {
+      document.getElementById(`email${i}`).value = '';
+    }
+  }
+  
+  function clearPhoneInputs() {
+    for (let i = 0; i < 6; i++) {
+      document.getElementById(`phone${i}`).value = '';
+    }
+  }
+  
+  function getEmailCode() {
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      const val = document.getElementById(`email${i}`).value;
+      if (val && /^\d$/.test(val)) code += val;
+      else return null;
+    }
+    return code.length === 6 ? code : null;
+  }
+  
+  function getPhoneCode() {
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      const val = document.getElementById(`phone${i}`).value;
+      if (val && /^\d$/.test(val)) code += val;
+      else return null;
+    }
+    return code.length === 6 ? code : null;
+  }
+  
+  function showMessage(msg, color) {
+    const msgDiv = document.getElementById('messageArea');
+    msgDiv.innerHTML = msg;
+    msgDiv.style.color = color;
+    setTimeout(() => {
+      if (document.getElementById('messageArea').innerHTML === msg) {
+        msgDiv.innerHTML = '';
+      }
+    }, 4000);
+  }
+  
+  function updateCompleteButton() {
+    const completeBtn = document.getElementById('completeBtn');
+    if (emailVerified && phoneVerified) {
+      completeBtn.disabled = false;
+      completeBtn.style.opacity = '1';
+    } else {
+      completeBtn.disabled = true;
+      completeBtn.style.opacity = '0.6';
+    }
+  }
+  
+  // Verify email code
+  async function verifyEmail() {
+    const enteredCode = getEmailCode();
+    const statusDiv = document.getElementById('emailStatus');
+    
+    if (!enteredCode) {
+      statusDiv.innerHTML = '❌ Enter 6-digit code';
+      statusDiv.className = 'status-badge status-pending';
+      showMessage('Please enter the complete verification code for email', '#f87171');
+      return false;
+    }
+    
+    if (enteredCode === emailCode) {
+      emailVerified = true;
+      statusDiv.innerHTML = '✓ Verified!';
+      statusDiv.className = 'status-badge status-verified';
+      // Disable email inputs
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`email${i}`).disabled = true;
+      }
+      showMessage('✅ Email verified successfully!', '#22c55e');
+      updateCompleteButton();
+      return true;
+    } else {
+      statusDiv.innerHTML = '❌ Invalid code';
+      statusDiv.className = 'status-badge status-pending';
+      // Add error highlight
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`email${i}`).classList.add('error');
+        setTimeout(() => document.getElementById(`email${i}`).classList.remove('error'), 300);
+      }
+      showMessage('Invalid email verification code. Please try again.', '#f87171');
+      return false;
+    }
+  }
+  
+  // Verify phone code
+  async function verifyPhone() {
+    const enteredCode = getPhoneCode();
+    const statusDiv = document.getElementById('phoneStatus');
+    
+    if (!enteredCode) {
+      statusDiv.innerHTML = '❌ Enter 6-digit code';
+      statusDiv.className = 'status-badge status-pending';
+      showMessage('Please enter the complete verification code for phone', '#f87171');
+      return false;
+    }
+    
+    if (enteredCode === phoneCode) {
+      phoneVerified = true;
+      statusDiv.innerHTML = '✓ Verified!';
+      statusDiv.className = 'status-badge status-verified';
+      // Disable phone inputs
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`phone${i}`).disabled = true;
+      }
+      showMessage('✅ Phone number verified successfully!', '#22c55e');
+      updateCompleteButton();
+      return true;
+    } else {
+      statusDiv.innerHTML = '❌ Invalid code';
+      statusDiv.className = 'status-badge status-pending';
+      for (let i = 0; i < 6; i++) {
+        document.getElementById(`phone${i}`).classList.add('error');
+        setTimeout(() => document.getElementById(`phone${i}`).classList.remove('error'), 300);
+      }
+      showMessage('Invalid phone verification code. Please try again.', '#f87171');
+      return false;
+    }
+  }
+  
+  // Auto-verify when all digits entered
+  function setupAutoVerify(inputs, verifyFn) {
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val && /^\d$/.test(val) && index < 5) {
+          document.getElementById(inputs[index + 1].id).focus();
+        }
+        // Check if all digits filled
+        let allFilled = true;
+        for (let i = 0; i < 6; i++) {
+          if (!document.getElementById(inputs[i].id).value) allFilled = false;
+        }
+        if (allFilled) {
+          verifyFn();
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          document.getElementById(inputs[index - 1].id).focus();
+        }
+      });
+      
+      input.addEventListener('beforeinput', (e) => {
+        if (e.data && !/^\d$/.test(e.data)) {
+          e.preventDefault();
+        }
+      });
+    });
+  }
+  
+  // Setup paste handlers
+  function setupPaste(containerId, inputIds, verifyFn) {
+    const container = document.getElementById(containerId);
+    container.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasteData = e.clipboardData.getData('text');
+      const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+      if (digits.length === 6) {
+        for (let i = 0; i < 6; i++) {
+          document.getElementById(inputIds[i]).value = digits[i];
+        }
+        document.getElementById(inputIds[5]).focus();
+        verifyFn();
+      } else if (digits.length > 0) {
+        for (let i = 0; i < digits.length; i++) {
+          if (i < 6) document.getElementById(inputIds[i]).value = digits[i];
+        }
+      }
+    });
+  }
+  
+  // Resend handlers
+  document.getElementById('resendEmail').addEventListener('click', () => {
+    if (!emailCanResend) {
+      showMessage(`Please wait ${emailTimeLeft} seconds before requesting another code`, '#fbbf24');
+      return;
+    }
+    sendEmailCode();
+    emailVerified = false;
+    document.getElementById('emailStatus').innerHTML = '⏳ Pending verification';
+    document.getElementById('emailStatus').className = 'status-badge status-pending';
+    for (let i = 0; i < 6; i++) {
+      document.getElementById(`email${i}`).disabled = false;
+      document.getElementById(`email${i}`).value = '';
+    }
+    document.getElementById('email0').focus();
+    updateCompleteButton();
+  });
+  
+  document.getElementById('resendPhone').addEventListener('click', () => {
+    if (!phoneCanResend) {
+      showMessage(`Please wait ${phoneTimeLeft} seconds before requesting another code`, '#fbbf24');
+      return;
+    }
+    sendPhoneCode();
+    phoneVerified = false;
+    document.getElementById('phoneStatus').innerHTML = '⏳ Pending verification';
+    document.getElementById('phoneStatus').className = 'status-badge status-pending';
+    for (let i = 0; i < 6; i++) {
+      document.getElementById(`phone${i}`).disabled = false;
+      document.getElementById(`phone${i}`).value = '';
+    }
+    updateCompleteButton();
+  });
+  
+  // Complete verification button
+  document.getElementById('completeBtn').addEventListener('click', async () => {
+    if (!emailVerified || !phoneVerified) {
+      showMessage('Please verify both email and phone before continuing', '#f87171');
+      return;
+    }
+    
+    const msgDiv = document.getElementById('messageArea');
+    msgDiv.innerHTML = '⏳ Completing verification and setting up your account...';
+    msgDiv.style.color = '#94a3b8';
+    
+    // In production, send to backend
+    try {
+      await fetch('http://192.168.0.101:5000/complete-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: userEmail, 
+          phone: userPhone,
+          emailVerified: true,
+          phoneVerified: true
+        })
+      }).catch(() => {});
+    } catch(e) {}
+    
+    localStorage.setItem('isFullyVerified', 'true');
+    localStorage.setItem('verificationTime', Date.now());
+    
+    msgDiv.innerHTML = '✅ Both email and phone verified! Redirecting to dashboard...';
+    msgDiv.style.color = '#22c55e';
+    
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1800);
+  });
+  
+  // Initialize
+  const emailInputs = ['email0', 'email1', 'email2', 'email3', 'email4', 'email5'].map(id => document.getElementById(id));
+  const phoneInputs = ['phone0', 'phone1', 'phone2', 'phone3', 'phone4', 'phone5'].map(id => document.getElementById(id));
+  
+  setupAutoVerify(emailInputs, verifyEmail);
+  setupAutoVerify(phoneInputs, verifyPhone);
+  setupPaste('emailCodeInputs', ['email0', 'email1', 'email2', 'email3', 'email4', 'email5'], verifyEmail);
+  setupPaste('phoneCodeInputs', ['phone0', 'phone1', 'phone2', 'phone3', 'phone4', 'phone5'], verifyPhone);
+  
+  // Initial code sending
+  sendEmailCode();
+  sendPhoneCode();
+  
+  // Focus first email input
+  document.getElementById('email0').focus();
+  
+  // Demo mode note if no stored data
+  if (!localStorage.getItem('registeredEmail') && !localStorage.getItem('registeredPhone')) {
+    console.log('Demo mode: Using demo contact info');
+  }
+</script>
+</body>
+</html>

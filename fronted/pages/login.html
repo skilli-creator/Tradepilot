@@ -2,146 +2,645 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🔷Tradepilot</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TradePilot • Sign In</title>
 <style>
-/* PAGE BACKGROUND */
-body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial, Helvetica, sans-serif;
-  background: radial-gradient(circle at center,#0b1f3a,#020617);
-  color:white;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-/* FLOATING LOGIN BOX */
-.login-container {
-  width:360px;
-  padding:40px;
-  border-radius:14px;
-  background:rgba(10,20,40,0.6);
-  backdrop-filter: blur(10px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.7);
-  text-align:center;
-}
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(ellipse at 30% 20%, #0a1428, #02040c);
+    color: #f1f5f9;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
 
-/* TITLE */
-.login-container h2 {
-  margin-bottom:25px;
-}
+  /* animated background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* INPUTS */
-.input-group {
-  margin-bottom:18px;
-  text-align:left;
-}
-.input-group label {
-  font-size:14px;
-  color:#9ca3af;
-}
-.input-group input {
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:#081a33;
-  color:white;
-  outline:none;
-}
+  /* floating glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 300px; height: 300px; background: #22c55e; top: -100px; left: -100px; }
+  .orb-2 { width: 400px; height: 400px; background: #3b82f6; bottom: -150px; right: -100px; }
 
-/* BUTTON */
-.login-btn {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#2563eb;
-  color:white;
-  font-size:15px;
-  cursor:pointer;
-  transition:0.3s;
-}
-.login-btn:hover {
-  background:#1d4ed8;
-}
+  /* main card */
+  .login-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 44px 40px;
+    background: rgba(8, 18, 38, 0.8);
+    backdrop-filter: blur(18px);
+    border-radius: 52px;
+    box-shadow: 0 30px 55px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeSlideUp 0.6s ease;
+    transition: transform 0.25s;
+  }
 
-/* FOOTER TEXT (signup) */
-.footer-text {
-  margin-top:18px;
-  font-size:13px;
-  color:#9ca3af;
-}
-.footer-text a {
-  color:#3b82f6;
-  text-decoration:none;
-}
+  .login-container:hover {
+    transform: translateY(-3px);
+  }
 
-/* NEW FOOTER */
-.main-footer {
-  position:absolute;
-  bottom:10px;
-  font-size:13px;
-  color:#64748b;
-  text-align:center;
-}
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    padding: 8px 22px;
+    border-radius: 60px;
+    margin-bottom: 28px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0a0f1f;
+  }
 
+  .login-container h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .subhead {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-bottom: 32px;
+  }
+
+  /* toggle between email/phone */
+  .login-method-toggle {
+    display: flex;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 60px;
+    padding: 6px;
+    margin-bottom: 28px;
+  }
+
+  .toggle-option {
+    flex: 1;
+    padding: 10px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    background: transparent;
+    color: #94a3b8;
+    border: none;
+  }
+
+  .toggle-option.active {
+    background: linear-gradient(105deg, #22c55e, #16a34a);
+    color: #0a0f1f;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+  }
+
+  /* input groups */
+  .input-group {
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .input-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 32px;
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    background: #0a122a;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .input-group input:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    background: #0f1838;
+  }
+
+  /* password wrapper with toggle */
+  .password-wrapper {
+    position: relative;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #9ca3af;
+    transition: 0.2s;
+  }
+
+  .toggle-password:hover {
+    color: #22c55e;
+  }
+
+  /* additional options row */
+  .options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+
+  .forgot-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+
+  .forgot-link:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+  }
+
+  /* login button */
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 40px;
+    background: linear-gradient(105deg, #22c55e, #16a34a);
+    color: #0a0f1f;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3);
+  }
+
+  .login-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(105deg, #2dd4bf, #22c55e);
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+  }
+
+  .message-area {
+    margin-top: 20px;
+    font-size: 13px;
+    min-height: 44px;
+    padding: 8px;
+    border-radius: 60px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .register-link {
+    margin-top: 28px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .register-link a {
+    color: #22c55e;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* FORGOT PASSWORD MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.25s;
+  }
+
+  .modal-card {
+    background: #0f1730;
+    border-radius: 48px;
+    padding: 36px 32px;
+    width: 90%;
+    max-width: 460px;
+    border: 1px solid #22c55e;
+    text-align: center;
+  }
+
+  .modal-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .modal-card p {
+    color: #9ca3af;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+
+  .modal-card input, .modal-card textarea {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 12px 0;
+    background: #0a122a;
+    border: 1px solid #2d3a66;
+    border-radius: 32px;
+    color: white;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .modal-card textarea {
+    border-radius: 24px;
+    resize: vertical;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+
+  .modal-btn-primary {
+    background: #22c55e;
+    color: #0a0f1f;
+  }
+
+  .modal-btn-secondary {
+    background: transparent;
+    border: 1px solid #4b5563;
+    color: white;
+  }
+
+  .footer-note {
+    position: absolute;
+    bottom: 16px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #4b5563;
+    z-index: 2;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .login-container { padding: 32px 24px; margin: 16px; }
+    .login-container h2 { font-size: 1.6rem; }
+  }
 </style>
 </head>
-
 <body>
 
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
 <div class="login-container">
-  <h2>Tradepilot Login</h2>
+  <div class="logo-badge">
+    🔷 TradePilot • Sign In
+  </div>
+  <h2>Welcome Back</h2>
+  <p class="subhead">Access your trading dashboard</p>
+
+  <!-- login method toggle -->
+  <div class="login-method-toggle">
+    <button class="toggle-option active" id="toggleEmailBtn">📧 Email</button>
+    <button class="toggle-option" id="togglePhoneBtn">📱 Phone</button>
+  </div>
 
   <form id="loginForm">
-    <div class="input-group">
-      <label>Email</label>
-      <input type="email" id="email" required>
+    <!-- Email input (default visible) -->
+    <div class="input-group" id="emailGroup">
+      <label>📧 Email Address</label>
+      <input type="email" id="emailInput" placeholder="trader@example.com" autocomplete="email">
+    </div>
+
+    <!-- Phone input (hidden by default) -->
+    <div class="input-group" id="phoneGroup" style="display: none;">
+      <label>📞 Phone Number</label>
+      <input type="tel" id="phoneInput" placeholder="+1 234 567 8900" autocomplete="tel">
     </div>
 
     <div class="input-group">
-      <label>Password</label>
-      <input type="password" id="password" required>
+      <label>🔒 Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="passwordInput" placeholder="••••••••" required>
+        <button type="button" class="toggle-password" id="togglePasswordBtn">👁️</button>
+      </div>
     </div>
 
-    <button class="login-btn" type="submit">Login</button>
+    <div class="options-row">
+      <div></div>
+      <a class="forgot-link" id="forgotPasswordBtn">Forgot password?</a>
+    </div>
+
+    <button class="login-btn" type="submit">🚀 Sign In</button>
   </form>
 
-  <p id="loginMessage"></p>
+  <div class="message-area" id="loginMessage"></div>
 
-  <div class="footer-text">
-    Don't have an account? <a href="register.html">Sign up</a>
+  <div class="register-link">
+    Don't have an account? <a href="register.html">Create free account →</a>
   </div>
 </div>
 
-<!-- ✅ NEW INTERNAL FOOTER -->
-<div class="main-footer">
-  © 2026 Tradepilot — Automated Trading Platform
+<footer class="footer-note">
+  © 2026 TradePilot — Secure trading infrastructure
+</footer>
+
+<!-- FORGOT PASSWORD MODAL (Request reset via admin email) -->
+<div id="resetModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>🔐 Reset Password</h3>
+    <p>Send a password reset request to our admin. You'll receive instructions via email.</p>
+    <input type="email" id="resetEmail" placeholder="Your registered email address" autocomplete="off">
+    <textarea id="resetMessage" rows="3" placeholder="Optional: additional info (username, phone) to verify identity..."></textarea>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-primary" id="sendResetRequest">Send Request</button>
+      <button class="modal-btn modal-btn-secondary" id="closeModalBtn">Cancel</button>
+    </div>
+    <div id="modalStatus" style="margin-top: 16px; font-size: 12px; color: #9ca3af;"></div>
+  </div>
 </div>
 
 <script>
-/* LOGIN HANDLER */
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+  // Toggle between email and phone login
+  const emailGroup = document.getElementById('emailGroup');
+  const phoneGroup = document.getElementById('phoneGroup');
+  const toggleEmail = document.getElementById('toggleEmailBtn');
+  const togglePhone = document.getElementById('togglePhoneBtn');
+  const emailInput = document.getElementById('emailInput');
+  const phoneInput = document.getElementById('phoneInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginMessage = document.getElementById('loginMessage');
 
-  let email = document.getElementById("email").value;
+  let activeMethod = 'email'; // 'email' or 'phone'
 
-  document.getElementById("loginMessage").innerText =
-    "Logged in successfully as " + email;
-  document.getElementById("loginMessage").style.color = "lightgreen";
+  toggleEmail.addEventListener('click', () => {
+    activeMethod = 'email';
+    toggleEmail.classList.add('active');
+    togglePhone.classList.remove('active');
+    emailGroup.style.display = 'block';
+    phoneGroup.style.display = 'none';
+    emailInput.required = true;
+    phoneInput.required = false;
+    loginMessage.innerHTML = '';
+  });
 
-  sessionStorage.setItem("username", email);
+  togglePhone.addEventListener('click', () => {
+    activeMethod = 'phone';
+    togglePhone.classList.add('active');
+    toggleEmail.classList.remove('active');
+    emailGroup.style.display = 'none';
+    phoneGroup.style.display = 'block';
+    emailInput.required = false;
+    phoneInput.required = true;
+    loginMessage.innerHTML = '';
+  });
 
-  setTimeout(() => {
-    window.location.href = "marketsdash.html";
-  }, 1000);
-});
+  // Toggle password visibility
+  const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+  togglePasswordBtn.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePasswordBtn.textContent = '🙈';
+    } else {
+      passwordInput.type = 'password';
+      togglePasswordBtn.textContent = '👁️';
+    }
+  });
+
+  // Login submission handler (demo + mock validation)
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = passwordInput.value.trim();
+    let identifier = '';
+    
+    if (activeMethod === 'email') {
+      identifier = emailInput.value.trim();
+      if (!identifier || !identifier.includes('@')) {
+        loginMessage.innerHTML = '❌ Please enter a valid email address';
+        loginMessage.style.color = '#f87171';
+        return;
+      }
+    } else {
+      identifier = phoneInput.value.trim();
+      if (!identifier || identifier.length < 8) {
+        loginMessage.innerHTML = '❌ Please enter a valid phone number';
+        loginMessage.style.color = '#f87171';
+        return;
+      }
+    }
+    
+    if (!password) {
+      loginMessage.innerHTML = '❌ Please enter your password';
+      loginMessage.style.color = '#f87171';
+      return;
+    }
+
+    loginMessage.innerHTML = '⏳ Authenticating...';
+    loginMessage.style.color = '#94a3b8';
+
+    // Simulate API call to your backend endpoint (replace with actual endpoint)
+    // Using the same server pattern as previous examples
+    try {
+      const payload = {
+        [activeMethod === 'email' ? 'email' : 'phone']: identifier,
+        password: password
+      };
+      
+      const response = await fetch('http://192.168.0.101:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      
+      if (response.status === 200 || data.status === 'success') {
+        loginMessage.innerHTML = '✅ Login successful! Redirecting to dashboard...';
+        loginMessage.style.color = '#22c55e';
+        // Store user session data
+        localStorage.setItem('userToken', data.token || 'demo-token');
+        localStorage.setItem('userIdentifier', identifier);
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } else {
+        loginMessage.innerHTML = `❌ ${data.message || 'Invalid credentials'}`;
+        loginMessage.style.color = '#f87171';
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      // Mock demo fallback (for testing without backend)
+      if (identifier && password.length >= 4) {
+        loginMessage.innerHTML = '⚠️ Demo mode: Backend not reachable. Use demo@tradepilot.com / any password to continue.';
+        loginMessage.style.color = '#fbbf24';
+        setTimeout(() => {
+          if (confirm('Continue to demo dashboard?')) {
+            window.location.href = 'demo-dashboard.html';
+          }
+        }, 500);
+      } else {
+        loginMessage.innerHTML = '⚠️ Server error. Please check connection.';
+        loginMessage.style.color = '#f87171';
+      }
+    }
+  });
+
+  // ---------- FORGOT PASSWORD MODAL (Send reset request via email to admin) ----------
+  const modal = document.getElementById('resetModal');
+  const forgotBtn = document.getElementById('forgotPasswordBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const sendResetBtn = document.getElementById('sendResetRequest');
+  const resetEmailInput = document.getElementById('resetEmail');
+  const resetMessageText = document.getElementById('resetMessage');
+  const modalStatus = document.getElementById('modalStatus');
+
+  forgotBtn.addEventListener('click', () => {
+    // Pre-fill email if user has typed something in login
+    if (activeMethod === 'email' && emailInput.value.trim()) {
+      resetEmailInput.value = emailInput.value.trim();
+    } else {
+      resetEmailInput.value = '';
+    }
+    resetMessageText.value = '';
+    modalStatus.innerHTML = '';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+  });
+
+  function closeModal() {
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+  }
+
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // send reset request (email to admin)
+  sendResetBtn.addEventListener('click', async () => {
+    const userEmail = resetEmailInput.value.trim();
+    if (!userEmail || !userEmail.includes('@')) {
+      modalStatus.innerHTML = '❌ Please enter a valid email address';
+      modalStatus.style.color = '#f87171';
+      return;
+    }
+
+    const additionalInfo = resetMessageText.value.trim() || 'No additional info';
+    modalStatus.innerHTML = '📧 Sending reset request to admin...';
+    modalStatus.style.color = '#94a3b8';
+
+    // In production, this endpoint should send an email to the admin
+    // For now, we simulate with a fetch to your backend mail endpoint.
+    // You can replace with actual admin notification endpoint.
+    try {
+      const response = await fetch('http://192.168.0.101:5000/request-password-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: userEmail,
+          message: additionalInfo,
+          reason: 'Password reset requested by user'
+        })
+      });
+      
+      if (response.ok) {
+        modalStatus.innerHTML = '✅ Request sent! Admin will contact you shortly via email.';
+        modalStatus.style.color = '#22c55e';
+        setTimeout(() => closeModal(), 2500);
+      } else {
+        throw new Error('Server responded with error');
+      }
+    } catch (err) {
+      // Fallback: simulate email composition (mailto for demo)
+      const subject = encodeURIComponent(`TradePilot Password Reset Request - ${userEmail}`);
+      const body = encodeURIComponent(
+        `User email: ${userEmail}\nAdditional info: ${additionalInfo}\n\nPlease assist with password reset.`
+      );
+      window.location.href = `mailto:admin@tradepilot.com?subject=${subject}&body=${body}`;
+      modalStatus.innerHTML = '📨 Email client opened. Send request to admin@tradepilot.com';
+      modalStatus.style.color = '#60a5fa';
+      setTimeout(() => closeModal(), 2000);
+    }
+  });
+
+  // optional: prefill from URL params or session
+  window.addEventListener('load', () => {
+    const storedEmail = localStorage.getItem('lastLoginEmail');
+    if (storedEmail && activeMethod === 'email') {
+      emailInput.value = storedEmail;
+    }
+  });
 </script>
-
 </body>
 </html>
